@@ -54,7 +54,8 @@ tssload_streambank float []
 )
   RETURNS text AS
 $BODY$
-Declare varout text;	
+Declare varout text;
+	
 BEGIN
 
 Drop Table If Exists nhdplus_out,huc12_out;
@@ -127,6 +128,8 @@ tssloadrate_total_ups  float Default 0,
 tss_conc  float Default 0,
 CONSTRAINT nhdplus_tmp_primary PRIMARY KEY (comid)
 ) ON COMMIT DROP;
+
+ 
 
 set enable_seqscan = off;
 
