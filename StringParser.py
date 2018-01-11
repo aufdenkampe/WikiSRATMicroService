@@ -18,7 +18,7 @@ class StringParser:
     def string_to_ob(self, input_string):
         try:
             output = []
-            input_variables = re.findall(r'\w+\s\([^)]+\)', input_string)#TODO:remove the ^)
+            input_variables = re.findall(r'\w+\s\([^)]+\)', input_string)  # TODO:remove the ^)
             for input_variable in input_variables:
                 variable_name = re.match(r'\w+', input_variable).group(0)
                 data_as_string = re.search(r'\([^)]+\)', input_variable).group(0)
@@ -37,14 +37,30 @@ class StringParser:
             raise e
 
     @classmethod
-    def convert_string_to_valid_type(self,string_in):
-        if(isinstance(string_in,str)):
+    def ob_to_string(self, object_in):
+        temp = {}
+        for huc12 in object_in:
+            for attribute, value in huc12.items():
+                try:
+                    temp[attribute].append(value)
+                except KeyError:
+                    temp[attribute] = [value]
+        temp_string = str(temp)
+        temp_string = temp_string.replace("\'", "")
+        temp_string = temp_string.replace(":", "")
+        temp_string = temp_string.replace("[", "(")
+        temp_string = temp_string.replace("]", ")")
+        return "HotSpotMap(" + temp_string[1:-1] + ")"
+
+    @classmethod
+    def convert_string_to_valid_type(self, string_in):
+        if (isinstance(string_in, str)):
             try:
                 return int(string_in)
             except ValueError:
                 try:
                     return float(string_in)
                 except ValueError:
-                    return string_in #if all else fails return a string
+                    return string_in  # if all else fails return a string
         else:
             raise AssertionError("input is not a string")
