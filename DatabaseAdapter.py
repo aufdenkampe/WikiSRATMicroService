@@ -20,7 +20,17 @@ class DatabaseAdapter:
         return result
 
     @classmethod
+    def array_to_python(self, array):
+        result = []
+        column_number_to_name = dict((v, k) for k, v in column_numbers.items())
+        for _ in range(0, len(array[0])):
+            result.append({})  # prep the right number of empty huc12 objects
+        for i, attribute_array in enumerate(array):
+            for j, attribute in enumerate(attribute_array):
+                result[j][column_number_to_name[i]] = attribute
+        return result
+
+    @classmethod
     def run_model(self, input_array):
         """input is the array of data, output should be the result of the query"""
         return "output string"
-
