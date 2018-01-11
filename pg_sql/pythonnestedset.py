@@ -11,5 +11,5 @@ rows = np.matrix(cur.fetchall()).astype(int);
 
 stack = [1];
 
-def up(n,stack):
-    stack =    
+# def up(n,stack):
+#     stack =

@@ -1,35 +1,50 @@
 import re
+from constants import schema
+from jsonschema import validate
+from jsonschema import ValidationError
+
 
 class StringParser:
     @classmethod
-    def parse(self,input_string):
+    def parse(self, input_string):
         try:
-            output = [{}]
-            input_variables = re.findall(r'\w+\s\([^)]+\)',input_string)
+            parsed = self.string_to_ob(input_string)
+            validate(parsed, schema)
+            return parsed
+        except ValidationError as e:
+            raise AttributeError(e.message)
+
+    @classmethod
+    def string_to_ob(self, input_string):
+        try:
+            output = []
+            input_variables = re.findall(r'\w+\s\([^)]+\)', input_string)#TODO:remove the ^)
             for input_variable in input_variables:
-                try:
-                    variable_name = re.match(r'\w+',input_variable).group(0)
-                except AttributeError:
-                    raise AttributeError("Variable name invalid ("+input_variable+")")
-                try:
-                    data_as_string = re.search(r'\([^)]+\)',input_variable).group(0)
-                except AttributeError:
-                    raise AttributeError("Value string invalid (" + input_variable + ")")
-                data_values = eval(data_as_string)
-                if type(data_values) != tuple:
-                    raise AttributeError("Value string not properly formatted (" + data_as_string + ")")
-                for i,data_value in enumerate(data_values):
-                    if(len(output) < i+1):
-                        if(variable_name == "huc12"):
+                variable_name = re.match(r'\w+', input_variable).group(0)
+                data_as_string = re.search(r'\([^)]+\)', input_variable).group(0)
+                data_values_as_strings = data_as_string[1:-1].split(",")
+                for i, data_value_as_string in enumerate(data_values_as_strings):
+                    data_value = self.convert_string_to_valid_type(data_value_as_string)
+                    if (len(output) < i + 1):
+                        if (variable_name == "huc12"):
                             output.append({})
                         else:
                             print(i)
-                            raise AttributeError("Inconsistent number of values (" +variable_name + ")")
+                            raise AttributeError("Inconsistent number of values (" + variable_name + ")")
                     output[i][variable_name] = data_value
-            print(output)
             return output
         except AttributeError as e:
             raise e
-        except Exception as e:
-            print(e)
-            raise AttributeError("input string was improperly formatted")
+
+    @classmethod
+    def convert_string_to_valid_type(self,string_in):
+        if(isinstance(string_in,str)):
+            try:
+                return int(string_in)
+            except ValueError:
+                try:
+                    return float(string_in)
+                except ValueError:
+                    return string_in #if all else fails return a string
+        else:
+            raise AssertionError("input is not a string")
