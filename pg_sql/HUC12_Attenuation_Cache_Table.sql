@@ -71,24 +71,192 @@ Group By comid
 ) ;
 -- runs in 1438120
 
+ALTER TABLE wikiwtershed.huc12_att_tmptbl1_comidextarray
+  ADD PRIMARY KEY (comid);
+
 Select * from wikiwtershed.HUC12_att_tmptbl1_comidextarray limit 100
 
-
- 
-
-
-
+Drop Table if Exists wikiwtershed.HUC12_att;
 
 Create Table wikiwtershed.HUC12_att
 (
-huc12 integer not null,
-tpload_hp_att float,
+huc12 character varying not null,
+
+ow2011_tp_att_coef float,
+ice2011_tp_att_coef float,
+urbop2011_tp_att_coef float,
+urblo2011_tp_att_coef float,
+urbmd2011_tp_att_coef float,
+urbhi2011_tp_att_coef float,
+bl2011_tp_att_coef float,
+decid2011_tp_att_coef float,
+conif2011_tp_att_coef float,
+mxfst2011_tp_att_coef float,
+shrb2011_tp_att_coef float,
+grs2011_tp_att_coef float,
+hay2011_tp_att_coef float,
+crop2011_tp_att_coef float,
+wdwet2011_tp_att_coef float,
+hbwet2011_tp_att_coef float,
+
+ow2011_tn_att_coef float,
+ice2011_tn_att_coef float,
+urbop2011_tn_att_coef float,
+urblo2011_tn_att_coef float,
+urbmd2011_tn_att_coef float,
+urbhi2011_tn_att_coef float,
+bl2011_tn_att_coef float,
+decid2011_tn_att_coef float,
+conif2011_tn_att_coef float,
+mxfst2011_tn_att_coef float,
+shrb2011_tn_att_coef float,
+grs2011_tn_att_coef float,
+hay2011_tn_att_coef float,
+crop2011_tn_att_coef float,
+wdwet2011_tn_att_coef float,
+hbwet2011_tn_att_coef float,
+
+ow2011_tss_att_coef float,
+ice2011_tss_att_coef float,
+urbop2011_tss_att_coef float,
+urblo2011_tss_att_coef float,
+urbmd2011_tss_att_coef float,
+urbhi2011_tss_att_coef float,
+bl2011_tss_att_coef float,
+decid2011_tss_att_coef float,
+conif2011_tss_att_coef float,
+mxfst2011_tss_att_coef float,
+shrb2011_tss_att_coef float,
+grs2011_tss_att_coef float,
+hay2011_tss_att_coef float,
+crop2011_tss_att_coef float,
+wdwet2011_tss_att_coef float,
+hbwet2011_tss_att_coef float
 );
 
-Alter Table Huc12_att add constraint pkhuc12_att Primary Key (huc12);
+set enable_seqscan = off; 
 
-Insert into huc12_att (huc12)
+
+insert into wikiwtershed.HUC12_att
 (
-Select huc12 
-From wikiwtershed.boundary_huc12
-);
+huc12,
+ow2011_tp_att_coef,
+ice2011_tp_att_coef,
+urbop2011_tp_att_coef,
+urblo2011_tp_att_coef,
+urbmd2011_tp_att_coef,
+urbhi2011_tp_att_coef,
+bl2011_tp_att_coef,
+decid2011_tp_att_coef,
+conif2011_tp_att_coef,
+mxfst2011_tp_att_coef,
+shrb2011_tp_att_coef,
+grs2011_tp_att_coef,
+hay2011_tp_att_coef,
+crop2011_tp_att_coef,
+wdwet2011_tp_att_coef,
+hbwet2011_tp_att_coef,
+
+ow2011_tn_att_coef,
+ice2011_tn_att_coef,
+urbop2011_tn_att_coef,
+urblo2011_tn_att_coef,
+urbmd2011_tn_att_coef,
+urbhi2011_tn_att_coef,
+bl2011_tn_att_coef,
+decid2011_tn_att_coef,
+conif2011_tn_att_coef,
+mxfst2011_tn_att_coef,
+shrb2011_tn_att_coef,
+grs2011_tn_att_coef,
+hay2011_tn_att_coef,
+crop2011_tn_att_coef,
+wdwet2011_tn_att_coef,
+hbwet2011_tn_att_coef,
+
+ow2011_tss_att_coef,
+ice2011_tss_att_coef,
+urbop2011_tss_att_coef,
+urblo2011_tss_att_coef,
+urbmd2011_tss_att_coef,
+urbhi2011_tss_att_coef,
+bl2011_tss_att_coef,
+decid2011_tss_att_coef,
+conif2011_tss_att_coef,
+mxfst2011_tss_att_coef,
+shrb2011_tss_att_coef,
+grs2011_tss_att_coef,
+hay2011_tss_att_coef,
+crop2011_tss_att_coef,
+wdwet2011_tss_att_coef,
+hbwet2011_tss_att_coef
+
+)
+
+Select 
+hcn.huc12,
+
+sum(coalesce(p_ow2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_ice2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_urbop2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_urblo2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_urbmd2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_urbhi2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_bl2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_decid2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_conif2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_mxfst2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_shrb2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_grs2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_hay2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_crop2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_wdwet2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_hbwet2011catcomid_x_huc12,0) * rdc_29),
+
+sum(coalesce(p_ow2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_ice2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_urbop2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_urblo2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_urbmd2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_urbhi2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_bl2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_decid2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_conif2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_mxfst2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_shrb2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_grs2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_hay2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_crop2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_wdwet2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_hbwet2011catcomid_x_huc12,0) * rdc_29),
+
+sum(coalesce(p_ow2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_ice2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_urbop2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_urblo2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_urbmd2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_urbhi2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_bl2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_decid2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_conif2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_mxfst2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_shrb2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_grs2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_hay2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_crop2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_wdwet2011catcomid_x_huc12,0) * rdc_29),
+sum(coalesce(p_hbwet2011catcomid_x_huc12,0) * rdc_29) 
+From 
+	wikiwtershed.cache_nhdcoefs ncfs
+	join
+	wikiwtershed.nhdplus_x_huc12 hcn
+	ON ncfs.comid = hcn.comid
+
+	join
+	wikiwtershed.huc12_att_tmptbl1_comidextarray ncfsa
+	on ncfs.comid = ncfsa.comid
+Where hcn.Huc12 is not null	
+Group By hcn.huc12;	 
+	
+Alter Table wikiwtershed.HUC12_att add constraint pkhuc12_att Primary Key (huc12);
+ 
