@@ -55,7 +55,7 @@ tssload_streambank float []
   RETURNS text AS
 $BODY$
 Declare varout text;
-
+ 
 --Declare _tn_coef double precision;
 --Declare _tp_coef double precision;
 --Declare _tss_coef double precision;	
@@ -228,8 +228,9 @@ tssload_tiledrain,
 tssload_streambank 
 
 )
-Select unnest(huc12a) as huc12a, 
-unnest(                tpload_hp),
+Select 
+unnest(huc12a) as huc12a, 
+unnest(tpload_hp),
 unnest(                tpload_Crop),
 unnest(                tpload_Wooded),
 unnest(                tpload_Open),
@@ -582,6 +583,7 @@ From
 Select distinct
 huc12, 10 tmp 
 From wikiwtershed.cache_nhdcoefs where huc12 like '020402%'
+Limit 10
 --From wikiwtershed.cache_nhdcoefs where huc12 in  ('010100020101','010100020102','010100020103')
 )t  ;
 
