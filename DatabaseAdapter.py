@@ -19,4 +19,8 @@ class DatabaseAdapter:
                 result[column_numbers[attribute]].append(value)
         return result
 
+    @classmethod
+    def run_model(self, input_array):
+        """input is the array of data, output should be the result of the query"""
+        return "output string"
 
