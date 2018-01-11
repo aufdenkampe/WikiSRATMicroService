@@ -307,7 +307,7 @@ x.comid
 	(              coalesce(huc12_out.tpload_subsurface,0)  *             coalesce(p_catarea_x_huc12,0)) +
 	(              coalesce(huc12_out.tpload_pointsource,0) *             coalesce(p_catarea_x_huc12,0)) +
 	(              coalesce(huc12_out.tpload_septics,0)     *             coalesce(p_catarea_x_huc12,0)) 
- ) *   ( 1 - ( ShedAreaDrainLake * (select  tp from wikiwtershed.retetion_factors) ))
+ ) *   ( 1 - ( (ShedAreaDrainLake/100) * (select  tp from wikiwtershed.retetion_factors) ))
  
 
 ,
@@ -331,7 +331,7 @@ x.comid
 	(              coalesce(huc12_out.tnload_subsurface,0)  *             coalesce(p_catarea_x_huc12,0)) +
 	(              coalesce(huc12_out.tnload_pointsource,0) *             coalesce(p_catarea_x_huc12,0)) +
 	(              coalesce(huc12_out.tnload_septics,0)     *             coalesce(p_catarea_x_huc12,0)) 
-) *   ( 1 - ( ShedAreaDrainLake * (select  tn from wikiwtershed.retetion_factors) ))
+) *   ( 1 - ( (ShedAreaDrainLake/100) * (select  tn from wikiwtershed.retetion_factors) ))
 
 
 ,
@@ -354,7 +354,7 @@ x.comid
 	--(              coalesce(huc12_out.tssload_subsurface,0)  *             coalesce(p_catarea_x_huc12,0)) +
 	--(              coalesce(huc12_out.tssload_pointsource,0) *             coalesce(p_catarea_x_huc12,0)) +
 	--(              coalesce(huc12_out.tssload_septics,0)     *             coalesce(p_catarea_x_huc12,0)) 
-) *   ( 1 - ( ShedAreaDrainLake * (select  tss from wikiwtershed.retetion_factors) ))
+) *   ( 1 - ( (ShedAreaDrainLake/100) * (select  tss from wikiwtershed.retetion_factors) ))
 
  
 
@@ -388,9 +388,11 @@ begin
 		,tssloadrate_total= ( tssloadrate_total + Coalesce(tss_plus,0) )
     From ( 
 		Select 
-			 tnloadrate_total  * (1 - ( ShedAreaDrainLake * (select  tn from wikiwtershed.retetion_factors) )) as tn_plus
-			,tploadrate_total  * (1 - ( ShedAreaDrainLake * (select  tp from wikiwtershed.retetion_factors) )) as tp_plus
-			,tssloadrate_total * (1 - ( ShedAreaDrainLake * (select tss from wikiwtershed.retetion_factors) )) as tss_plus
+
+			--0 as tn_plus,0 as tp_plus, 0 as tss_plus	
+			 tnloadrate_total  * (1 - ( (ShedAreaDrainLake/100) * (select  tn from wikiwtershed.retetion_factors) )) as tn_plus
+			 ,tploadrate_total  * (1 - ( (ShedAreaDrainLake/100) * (select  tp from wikiwtershed.retetion_factors) )) as tp_plus
+			 ,tssloadrate_total * (1 - ( (ShedAreaDrainLake/100) * (select tss from wikiwtershed.retetion_factors) )) as tss_plus
 	 
 		From nhdplus_out 
 		where comid = _r.comid
@@ -456,14 +458,14 @@ varout :=
 	|| (Select '}{comid'::text)
 	|| (Select array_agg(comid)::text from nhdplus_out)
 
-	|| (Select '{ tploadrate_total  ' || array_agg(tploadrate_total)::text || '}' from nhdplus_out)
-	|| (Select '{ tp_conc' || array_agg(tp_conc)::text || '}' from nhdplus_out)
+	|| (Select '{tploadrate_total  ' || array_agg(tploadrate_total)::text || '}' from nhdplus_out)
+	|| (Select '{tp_conc' || array_agg(tp_conc)::text || '}' from nhdplus_out)
 	
-	|| (Select '{ tnloadrate_total' || array_agg(tnloadrate_total)::text || '}' from nhdplus_out)
-	|| (Select '{ tn_conc' || array_agg(tn_conc)::text || '}' from nhdplus_out)
-	
-	|| (Select '{ tssloadrate_total' || array_agg(tssloadrate_total)::text || '}' from nhdplus_out)
-	|| (Select '{ tss_conc' || array_agg(tss_conc)::text || '}' from nhdplus_out)
+	|| (Select '{tnloadrate_total' || array_agg(tnloadrate_total)::text || '}' from nhdplus_out)
+	|| (Select '{tn_conc' || array_agg(tn_conc)::text || '}' from nhdplus_out)
+ 
+	|| (Select '{tssloadrate_total' || array_agg(tssloadrate_total)::text || '}' from nhdplus_out)
+	|| (Select '{tss_conc' || array_agg(tss_conc)::text || '}' from nhdplus_out)
 	||(Select '}}'::text )
 );
 
@@ -579,7 +581,7 @@ From
 (
 Select distinct
 huc12, 10 tmp 
-From wikiwtershed.cache_nhdcoefs Limit 1
+From wikiwtershed.cache_nhdcoefs where huc12 like '020402%'
 --From wikiwtershed.cache_nhdcoefs where huc12 in  ('010100020101','010100020102','010100020103')
 )t  ;
 
