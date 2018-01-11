@@ -55,9 +55,11 @@ tssload_streambank float []
   RETURNS text AS
 $BODY$
 Declare varout text;
+
 --Declare _tn_coef double precision;
 --Declare _tp_coef double precision;
 --Declare _tss_coef double precision;	
+
 BEGIN
 
 --_tn_coef := (select tn from wikiwtershed.retetion_factors);
@@ -175,6 +177,8 @@ tssloadrate_total_ups  float Default 0,
 tss_conc  float Default 0,
 CONSTRAINT nhdplus_tmp_primary PRIMARY KEY (comid)
 ) ON COMMIT DROP;
+
+ 
 
 set enable_seqscan = off;
 
