@@ -5,7 +5,7 @@
 
 -- DROP FUNCTION wikiwtershed.srat_tst(character varying[]);
 
-CREATE OR REPLACE FUNCTION wikiwtershed.srat_tst
+CREATE OR REPLACE FUNCTION wikiwtershed.srat_nhd
 (
 huc12a character varying[],
 tpload_hp float [],
@@ -52,10 +52,15 @@ tssload_streambank float []
 
 
 )
-  RETURNS text AS
+  RETURNS TABLE(
+	comid int, 
+	tploadrate_total float, tploadrate_conc float, 
+	tnloadrate_total float, tnloadrate_conc float, 
+	tssloadrate_total float, tssloadrate_conc float
+  ) AS
 $BODY$
 Declare varout text;
- 
+
 --Declare _tn_coef double precision;
 --Declare _tp_coef double precision;
 --Declare _tss_coef double precision;	
@@ -228,9 +233,8 @@ tssload_tiledrain,
 tssload_streambank 
 
 )
-Select 
-unnest(huc12a) as huc12a, 
-unnest(tpload_hp),
+Select unnest(huc12a) as huc12a, 
+unnest(                tpload_hp),
 unnest(                tpload_Crop),
 unnest(                tpload_Wooded),
 unnest(                tpload_Open),
@@ -308,7 +312,7 @@ x.comid
 	(              coalesce(huc12_out.tpload_subsurface,0)  *             coalesce(p_catarea_x_huc12,0)) +
 	(              coalesce(huc12_out.tpload_pointsource,0) *             coalesce(p_catarea_x_huc12,0)) +
 	(              coalesce(huc12_out.tpload_septics,0)     *             coalesce(p_catarea_x_huc12,0)) 
- ) *   ( 1 - ( (ShedAreaDrainLake/100) * (select  tp from wikiwtershed.retetion_factors) ))
+ ) *   ( 1 - ( ShedAreaDrainLake * (select  tp from wikiwtershed.retetion_factors) ))
  
 
 ,
@@ -332,7 +336,7 @@ x.comid
 	(              coalesce(huc12_out.tnload_subsurface,0)  *             coalesce(p_catarea_x_huc12,0)) +
 	(              coalesce(huc12_out.tnload_pointsource,0) *             coalesce(p_catarea_x_huc12,0)) +
 	(              coalesce(huc12_out.tnload_septics,0)     *             coalesce(p_catarea_x_huc12,0)) 
-) *   ( 1 - ( (ShedAreaDrainLake/100) * (select  tn from wikiwtershed.retetion_factors) ))
+) *   ( 1 - ( ShedAreaDrainLake * (select  tn from wikiwtershed.retetion_factors) ))
 
 
 ,
@@ -355,7 +359,7 @@ x.comid
 	--(              coalesce(huc12_out.tssload_subsurface,0)  *             coalesce(p_catarea_x_huc12,0)) +
 	--(              coalesce(huc12_out.tssload_pointsource,0) *             coalesce(p_catarea_x_huc12,0)) +
 	--(              coalesce(huc12_out.tssload_septics,0)     *             coalesce(p_catarea_x_huc12,0)) 
-) *   ( 1 - ( (ShedAreaDrainLake/100) * (select  tss from wikiwtershed.retetion_factors) ))
+) *   ( 1 - ( ShedAreaDrainLake * (select  tss from wikiwtershed.retetion_factors) ))
 
  
 
@@ -389,11 +393,9 @@ begin
 		,tssloadrate_total= ( tssloadrate_total + Coalesce(tss_plus,0) )
     From ( 
 		Select 
-
-			--0 as tn_plus,0 as tp_plus, 0 as tss_plus	
-			 tnloadrate_total  * (1 - ( (ShedAreaDrainLake/100) * (select  tn from wikiwtershed.retetion_factors) )) as tn_plus
-			 ,tploadrate_total  * (1 - ( (ShedAreaDrainLake/100) * (select  tp from wikiwtershed.retetion_factors) )) as tp_plus
-			 ,tssloadrate_total * (1 - ( (ShedAreaDrainLake/100) * (select tss from wikiwtershed.retetion_factors) )) as tss_plus
+			 tnloadrate_total  * (1 - ( ShedAreaDrainLake * (select  tn from wikiwtershed.retetion_factors) )) as tn_plus
+			,tploadrate_total  * (1 - ( ShedAreaDrainLake * (select  tp from wikiwtershed.retetion_factors) )) as tp_plus
+			,tssloadrate_total * (1 - ( ShedAreaDrainLake * (select tss from wikiwtershed.retetion_factors) )) as tss_plus
 	 
 		From nhdplus_out 
 		where comid = _r.comid
@@ -406,74 +408,14 @@ end;
 $$
 ;
  
-
 set enable_seqscan = on;
 
-
-varout := 
-(	(Select '{{huc12'::text)
-	|| (Select array_agg(huc12)::text from huc12_out)
-
-	|| (Select '{ tpload_hp_att' || array_agg(tpload_hp_att)::text || '}' from huc12_out)
-	|| (Select '{ tpload_Crop_att ' || array_agg(tpload_Crop_att)::text || '}' from huc12_out)
-	|| (Select '{ tpload_Wooded_att ' || array_agg(tpload_Wooded_att)::text || '}' from huc12_out)
-	|| (Select '{ tpload_Open_att ' || array_agg(tpload_Open_att)::text || '}' from huc12_out)
-	|| (Select '{ tpload_barren_att ' || array_agg(tpload_barren_att)::text || '}' from huc12_out)
-	|| (Select '{ tpload_ldm_att ' || array_agg(tpload_ldm_att)::text || '}' from huc12_out)
-	|| (Select '{ tpload_MDM_att ' || array_agg(tpload_MDM_att)::text || '}' from huc12_out)
-	|| (Select '{ tpload_HDM_att ' || array_agg(tpload_HDM_att)::text || '}' from huc12_out)
-	|| (Select '{ tpload_OtherUp_att ' || array_agg(tpload_OtherUp_att)::text || '}' from huc12_out)
-	|| (Select '{ tpload_FarmAn_att ' || array_agg(tpload_FarmAn_att)::text || '}' from huc12_out)
-	|| (Select '{ tpload_tiledrain_att ' || array_agg(tpload_tiledrain_att)::text || '}' from huc12_out)
-	|| (Select '{ tpload_streambank_att ' || array_agg(tpload_streambank_att)::text || '}' from huc12_out)
-	|| (Select '{ tpload_subsurface_att ' || array_agg(tpload_subsurface_att)::text || '}' from huc12_out)
-	|| (Select '{ tpload_pointsource_att ' || array_agg(tpload_pointsource_att)::text || '}' from huc12_out)
-	|| (Select '{ tpload_septics_att ' || array_agg(tpload_septics_att)::text || '}' from huc12_out)
-	|| (Select '{ tnload_hp_att ' || array_agg(tnload_hp_att)::text || '}' from huc12_out)
-	|| (Select '{ tnload_crop_att ' || array_agg(tnload_crop_att)::text || '}' from huc12_out)
-	|| (Select '{ tnload_wooded_att ' || array_agg(tnload_wooded_att)::text || '}' from huc12_out)
-	|| (Select '{ tnload_open_att ' || array_agg(tnload_open_att)::text || '}' from huc12_out)
-	|| (Select '{ tnload_barren_att ' || array_agg(tnload_barren_att)::text || '}' from huc12_out)
-	|| (Select '{ tnload_ldm_att ' || array_agg(tnload_ldm_att)::text || '}' from huc12_out)
-	|| (Select '{ tnload_mdm_att ' || array_agg(tnload_mdm_att)::text || '}' from huc12_out)
-	|| (Select '{ tnload_hdm_att ' || array_agg(tnload_hdm_att)::text || '}' from huc12_out)
-	|| (Select '{ tnload_otherup_att ' || array_agg(tnload_otherup_att)::text || '}' from huc12_out)
-	|| (Select '{ tnload_farman_att ' || array_agg(tnload_farman_att)::text || '}' from huc12_out)
-	|| (Select '{ tnload_tiledrain_att ' || array_agg(tnload_tiledrain_att)::text || '}' from huc12_out)
-	|| (Select '{ tnload_streambank_att ' || array_agg(tnload_streambank_att)::text || '}' from huc12_out)
-	|| (Select '{ tnload_subsurface_att ' || array_agg(tnload_subsurface_att)::text || '}' from huc12_out)
-	|| (Select '{ tnload_pointsource_att ' || array_agg(tnload_pointsource_att)::text || '}' from huc12_out)
-	|| (Select '{ tnload_septics_att ' || array_agg(tnload_septics_att)::text || '}' from huc12_out)
-	|| (Select '{ tssload_hp_att ' || array_agg(tssload_hp_att)::text || '}' from huc12_out)
-	|| (Select '{ tssload_crop_att ' || array_agg(tssload_crop_att)::text || '}' from huc12_out)
-	|| (Select '{ tssload_wooded_att ' || array_agg(tssload_wooded_att)::text || '}' from huc12_out)
-	|| (Select '{ tssload_open_att ' || array_agg(tssload_open_att)::text || '}' from huc12_out)
-	|| (Select '{ tssload_barren_att ' || array_agg(tssload_barren_att)::text || '}' from huc12_out)
-	|| (Select '{ tssload_ldm_att ' || array_agg(tssload_ldm_att)::text || '}' from huc12_out)
-	|| (Select '{ tssload_mdm_att ' || array_agg(tssload_mdm_att)::text || '}' from huc12_out)
-	|| (Select '{ tssload_hdm_att ' || array_agg(tssload_hdm_att)::text || '}' from huc12_out)
-	|| (Select '{ tssload_otherup_att ' || array_agg(tssload_otherup_att)::text || '}' from huc12_out)
-	|| (Select '{ tssload_tiledrain_att ' || array_agg(tssload_tiledrain_att)::text || '}' from huc12_out)
-	|| (Select '{ tssload_streambank_att ' || array_agg(tssload_streambank_att)::text || '}' from huc12_out)
-
-	|| (Select '}{comid'::text)
-	|| (Select array_agg(comid)::text from nhdplus_out)
-
-	|| (Select '{tploadrate_total  ' || array_agg(tploadrate_total)::text || '}' from nhdplus_out)
-	|| (Select '{tp_conc' || array_agg(tp_conc)::text || '}' from nhdplus_out)
-	
-	|| (Select '{tnloadrate_total' || array_agg(tnloadrate_total)::text || '}' from nhdplus_out)
-	|| (Select '{tn_conc' || array_agg(tn_conc)::text || '}' from nhdplus_out)
- 
-	|| (Select '{tssloadrate_total' || array_agg(tssloadrate_total)::text || '}' from nhdplus_out)
-	|| (Select '{tss_conc' || array_agg(tss_conc)::text || '}' from nhdplus_out)
-	||(Select '}}'::text )
-);
-
-varout := ( Select replace(varout, '{', '('));
-varout := ( Select replace(varout, '}', ')'));
-
-RETURN varout;
+Select 
+	comid, 
+	tploadrate_total,  tploadrate_conc, 
+	tnloadrate_total,  tnloadrate_conc, 
+	tssloadrate_total, tssloadrate_conc 
+From nhdplus_out;
 
 END;
 $BODY$
@@ -482,7 +424,7 @@ $BODY$
 
 
 
-GRANT EXECUTE ON FUNCTION wikiwtershed.srat_tst
+GRANT EXECUTE ON FUNCTION wikiwtershed.srat_nhd
 (
 huc12a character varying[],
 tpload_hp float [],
@@ -529,62 +471,3 @@ tssload_streambank float []
 )
 
 TO ms_select;
-
-Select wikiwtershed.srat_tst
-( array_agg(huc12) 
-, array_agg(tmp)  
-, array_agg(tmp)
-, array_agg(tmp) 
-, array_agg(tmp)
-, array_agg(tmp) 
-, array_agg(tmp)
-, array_agg(tmp) 
-, array_agg(tmp)
-, array_agg(tmp) 
-, array_agg(tmp)
-
-, array_agg(tmp) 
-, array_agg(tmp)
-, array_agg(tmp) 
-, array_agg(tmp)
-, array_agg(tmp) 
-, array_agg(tmp)
-, array_agg(tmp) 
-, array_agg(tmp)
-, array_agg(tmp) 
-, array_agg(tmp)
-
-, array_agg(tmp) 
-, array_agg(tmp)
-, array_agg(tmp) 
-, array_agg(tmp)
-, array_agg(tmp) 
-, array_agg(tmp)
-, array_agg(tmp) 
-, array_agg(tmp)
-, array_agg(tmp) 
-, array_agg(tmp)
-
-, array_agg(tmp) 
-, array_agg(tmp)
-, array_agg(tmp) 
-, array_agg(tmp)
-, array_agg(tmp) 
-, array_agg(tmp)
-, array_agg(tmp) 
-, array_agg(tmp)
-, array_agg(tmp) 
-, array_agg(tmp)
-
-, array_agg(tmp)
-)
-From
-(
-Select distinct
-huc12, 10 tmp 
-From wikiwtershed.cache_nhdcoefs where huc12 like '020402%'
-Limit 10
---From wikiwtershed.cache_nhdcoefs where huc12 in  ('010100020101','010100020102','010100020103')
-)t  ;
-
-

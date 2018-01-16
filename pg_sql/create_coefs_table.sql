@@ -18,6 +18,6 @@ ALTER TABLE wikiwtershed.cache_nhdcoefs
   ADD FOREIGN KEY (huc12) REFERENCES wikiwtershed.boundary_huc12 (huc12)
    ON UPDATE NO ACTION ON DELETE NO ACTION;
 CREATE INDEX huc12foreignkeycoefs2
-  ON wikiwtershed.nhdcoefs(huc12);
+  ON wikiwtershed.cache_nhdcoefs(huc12);
 
 
