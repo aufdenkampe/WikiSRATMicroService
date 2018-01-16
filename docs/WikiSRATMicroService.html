@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<!-- saved from url=(0076)file:///C:/Users/Austin/Documents/GitHub/SRAT/docs/WikiSRATMicroService.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <title>WikiSRATMicroService</title>
+    <style type="text/css">
+      body {
+	font-family: Trebuchet MS, sans-serif;
+	font-size: 15px;
+	color: #444;
+	margin-right: 24px;
+}
+
+h1	{
+	font-size: 25px;
+}
+h2	{
+	font-size: 20px;
+}
+h3	{
+	font-size: 16px;
+	font-weight: bold;
+}
+hr	{
+	height: 1px;
+	border: 0;
+	color: #ddd;
+	background-color: #ddd;
+}
+
+.app-desc {
+  clear: both;
+  margin-left: 20px;
+}
+.param-name {
+  width: 100%;
+}
+.license-info {
+  margin-left: 20px;
+}
+
+.license-url {
+  margin-left: 20px;
+}
+
+.model {
+  margin: 0 0 0px 20px;
+}
+
+.method {
+  margin-left: 20px;
+}
+
+.method-notes	{
+	margin: 10px 0 20px 0;
+	font-size: 90%;
+	color: #555;
+}
+
+pre {
+  padding: 10px;
+  margin-bottom: 2px;
+}
+
+.http-method {
+ text-transform: uppercase;
+}
+
+pre.get {
+  background-color: #0f6ab4;
+}
+
+pre.post {
+  background-color: #10a54a;
+}
+
+pre.put {
+  background-color: #c5862b;
+}
+
+pre.delete {
+  background-color: #a41e22;
+}
+
+.huge	{
+	color: #fff;
+}
+
+pre.example {
+  background-color: #f3f3f3;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+code {
+  white-space: pre;
+}
+
+.nickname {
+  font-weight: bold;
+}
+
+.method-path {
+  font-size: 1.5em;
+  background-color: #0f6ab4;
+}
+
+.up {
+  float:right;
+}
+
+.parameter {
+  width: 500px;
+}
+
+.param {
+  width: 500px;
+  padding: 10px 0 0 20px;
+  font-weight: bold;
+}
+
+.param-desc {
+  width: 700px;
+  padding: 0 0 0 20px;
+  color: #777;
+}
+
+.param-type {
+  font-style: italic;
+}
+
+.param-enum-header {
+width: 700px;
+padding: 0 0 0 60px;
+color: #777;
+font-weight: bold;
+}
+
+.param-enum {
+width: 700px;
+padding: 0 0 0 80px;
+color: #777;
+font-style: italic;
+}
+
+.field-label {
+  padding: 0;
+  margin: 0;
+  clear: both;
+}
+
+.field-items	{
+	padding: 0 0 15px 0;
+	margin-bottom: 15px;
+}
+
+.return-type {
+  clear: both;
+  padding-bottom: 10px;
+}
+
+.param-header {
+  font-weight: bold;
+}
+
+.method-tags {
+  text-align: right;
+}
+
+.method-tag {
+  background: none repeat scroll 0% 0% #24A600;
+  border-radius: 3px;
+  padding: 2px 10px;
+  margin: 2px;
+  color: #FFF;
+  display: inline-block;
+  text-decoration: none;
+}
+
+    </style>
+  </head>
+  <body>
+  <h1>WikiSRATMicroService</h1>
+    <div class="app-desc">API docs for the WikiSRATMicroService</div>
+    
+    
+    <div class="app-desc">Version: 0.0.1</div>
+    <div class="app-desc">BasePath:/</div>
+    <div class="license-info">All rights reserved</div>
+    <div class="license-url">http://apache.org/licenses/LICENSE-2.0.html</div>
+  <h2>Access</h2>
+    <ol>
+      <li>APIKey KeyParamName:api_key KeyInQuery:false KeyInHeader:true</li>
+    </ol>
+
+  <h2><a name="__Methods">Methods</a></h2>
+  
+  
+  
+
+  <h1><a name="SratModel">SratModel</a></h1>
+  <div class="method"><a name="runSratModelPost">
+    </a><div class="method-path"><a name="runSratModelPost">
+    </a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /runSratModel/</code></pre></div>
+    <div class="method-summary">Run the model using the data provided (<span class="nickname">runSratModelPost</span>)</div>
+    <div class="method-notes"></div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="heaader">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">body <a href="file:///C:/Users/Austin/Desktop/html-client/index.html#huc12">huc12</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> — Point for which to calculate watershed boundary </div>
+
+    <h3 class="field-label">Example data<pre class="example"><code>[
+  {
+    "huc12": 0,
+    "tpload_hp": 0,
+    "tpload_Crop": 0,
+    "tpload_Wooded": 0,
+    "tpload_Open": 0,
+    "tpload_barren": 0,
+    "tpload_ldm": 0,
+    "tpload_MDM": 0,
+    "tpload_HDM": 0,
+    "tpload_OtherUp": 0,
+    "tpload_FarmAn": 0,
+    "tpload_tiledrain": 0,
+    "tpload_streambank": 0,
+    "tpload_subsurface": 0,
+    "tpload_pointsource": 0,
+    "tpload_septics": 0,
+    "tnload_hp": 0,
+    "tnload_crop": 0,
+    "tnload_wooded": 0,
+    "tnload_open": 0,
+    "tnload_barren": 0,
+    "tnload_ldm": 0,
+    "tnload_mdm": 0,
+    "tnload_hdm": 0,
+    "tnload_otherup": 0,
+    "tnload_farman": 0,
+    "tnload_tiledrain": 0,
+    "tnload_streambank": 0,
+    "tnload_subsurface": 0,
+    "tnload_pointsource": 0,
+    "tnload_septics": 0,
+    "tssload_hp": 0,
+    "tssload_crop": 0,
+    "tssload_wooded": 0,
+    "tssload_open": 0,
+    "tssload_barren": 0,
+    "tssload_ldm": 0,
+    "tssload_mdm": 0,
+    "tssload_hdm": 0,
+    "tssload_otherup": 0,
+    "tssload_tiledrain": 0,
+    "tssload_streambank": 0
+  }
+]</code></pre></h3></div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="file:///C:/Users/Austin/Desktop/html-client/index.html#huc12Response">huc12Response</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "huc12s": [
+    {
+      "huc12": 0,
+      "tpload_hp_att": 0,
+      "tpload_Crop_att": 0,
+      "tpload_Wooded_att": 0,
+      "tpload_Open_att": 0,
+      "tpload_barren_att": 0,
+      "tpload_ldm_att": 0,
+      "tpload_MDM_att": 0,
+      "tpload_HDM_att": 0,
+      "tpload_OtherUp_att": 0,
+      "tpload_FarmAn_att": 0,
+      "tpload_tiledrain_att": 0,
+      "tpload_streambank_att": 0,
+      "tpload_subsurface_att": 0,
+      "tpload_pointsource_att": 0,
+      "tpload_septics_att": 0,
+      "tnload_hp_att": 0,
+      "tnload_crop_att": 0,
+      "tnload_wooded_att": 0,
+      "tnload_open_att": 0,
+      "tnload_barren_att": 0,
+      "tnload_ldm_att": 0,
+      "tnload_mdm_att": 0,
+      "tnload_hdm_att": 0,
+      "tnload_otherup_att": 0,
+      "tnload_farman_att": 0,
+      "tnload_tiledrain_att": 0,
+      "tnload_streambank_att": 0,
+      "tnload_subsurface_att": 0,
+      "tnload_pointsource_att": 0,
+      "tnload_septics_att": 0,
+      "tssload_hp_att": 0,
+      "tssload_crop_att": 0,
+      "tssload_wooded_att": 0,
+      "tssload_open_att": 0,
+      "tssload_barren_att": 0,
+      "tssload_ldm_att": 0,
+      "tssload_mdm_att": 0,
+      "tssload_hdm_att": 0,
+      "tssload_otherup_att": 0,
+      "tssload_tiledrain_att": 0,
+      "tssload_streambank_att": 0
+    }
+  ],
+  "comids": [
+    {
+      "comid": 0,
+      "huc12": 0,
+      "tploadrate_total": 0,
+      "tp_conc": 0,
+      "tnloadrate_total": 0,
+      "tn_conc": 0,
+      "tssloadrate_total": 0,
+      "tss_conc": 0
+    }
+  ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="file:///C:/Users/Austin/Desktop/html-client/index.html#huc12Response">huc12Response</a>
+    <h4 class="field-label">400</h4>
+    Error with input
+        <a href="file:///C:/Users/Austin/Desktop/html-client/index.html#"></a>
+  </div> <!-- method -->
+  <hr>
+
+  <h2></h2>
+  
+
+  
+  
+  
+  
+  
+  
+
+</body></html>
