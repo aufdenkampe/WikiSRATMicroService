@@ -4,19 +4,20 @@ info:
   version: 0.0.1
   title: WikiSRATMicroService
   termsOfService: ''
-basePath: /
+host: hb56cx14vf.execute-api.us-east-1.amazonaws.com
+basePath: /prod/
 tags:
   - name: sratModel
     description: ''
 schemes:
-  - http
+  - https
 securityDefinitions:
   api_key:
     type: apiKey
-    name: api_key
+    name: x-api-key
     in: header
 paths:
-  /runSratModel/:
+  /SratRunModel:
     post:
       tags:
         - sratModel
@@ -47,9 +48,9 @@ definitions:
       type: object
       properties:
         huc12:
-          type: integer
-          minimum: 0
-          maximum: 999999999999
+          type: string
+          pattern: '^[0-9]{1,12}$'
+          example: '020402010101'
         tpload_hp:
           type: number
         tpload_Crop:
@@ -141,9 +142,9 @@ definitions:
           type: object
           properties:
             huc12:
-              type: integer
-              minimum: 0
-              maximum: 999999999999
+              type: string
+              pattern: '^[0-9]{1,12}$'
+              example: '020402010101'
             tpload_hp_att:
               type: number
             tpload_Crop_att:

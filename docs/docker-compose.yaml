@@ -1,0 +1,10 @@
+# docker-compose.yaml
+version: "2"
+services:
+  swagger-ui:
+    environment:
+    - SWAGGER_JSON=/swagger.json
+    image:   "swaggerapi/swagger-ui"
+    volumes: ["./swagger.json:/swagger.json"]
+    restart: always
+    ports:   ["8080:8080"]
