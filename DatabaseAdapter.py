@@ -24,11 +24,11 @@ class DatabaseAdapter:
     def huc12_array_to_python(self, array):
         result = []
         column_number_to_name = dict((v, k) for k, v in huc12_column_numbers.items())
-        for _ in range(0, len(array[0])):
+        for _ in range(0, len(array)):
             result.append({})  # prep the right number of empty huc12 objects
-        for i, attribute_array in enumerate(array):
-            for j, attribute in enumerate(attribute_array):
-                result[j][column_number_to_name[i]] = attribute
+        for i, comid in enumerate(array):
+            for j, attribute in enumerate(comid):
+                result[i][column_number_to_name[j]] = attribute
         return result
 
     @classmethod
