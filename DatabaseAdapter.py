@@ -45,4 +45,7 @@ class DatabaseAdapter:
     def run_model(self, input_array):
         cur = self.conn.cursor()
         cur.callproc('wikiwtershed.srat_nhd', input_array)
-        return {"huc12s": [], "comids": self.comid_array_to_python(cur.fetchall())}
+        comids = self.comid_array_to_python(cur.fetchall())
+        cur.callproc('wikiwtershed.srat_huc12', input_array)
+        huc12s = self.huc12_array_to_python(cur.fetchall())
+        return {"huc12s": huc12s, "comids": comids}
