@@ -5,7 +5,7 @@
 
 -- DROP FUNCTION wikiwtershed.srat_tst(character varying[]);
 
-CREATE OR REPLACE FUNCTION wikiwtershed.srat_nhd
+CREATE OR REPLACE FUNCTION wikiwtershed.srat_huc12
 (
 huc12a character varying[],
 tpload_hp float [],
@@ -53,10 +53,48 @@ tssload_streambank float []
 
 )
   RETURNS TABLE(
-	comid2 int, 
-	tploadrate_total2 float, tploadrate_conc2 float, 
-	tnloadrate_total2 float, tnloadrate_conc2 float, 
-	tssloadrate_total2 float, tssloadrate_conc2 float
+huc12a_out character varying,
+tpload_hp_out float,
+tpload_Crop_out float,
+tpload_Wooded_out float,
+tpload_Open_out float,
+tpload_barren_out float,
+tpload_ldm_out float,
+tpload_MDM_out float,
+tpload_HDM_out float,
+tpload_OtherUp_out float,
+tpload_FarmAn_out float,
+tpload_tiledrain_out float,
+tpload_streambank_out float,
+tpload_subsurface_out float,
+tpload_pointsource_out float,
+tpload_septics_out float,
+tnload_hp_out float,
+tnload_crop_out float,
+tnload_wooded_out float,
+tnload_open_out float,
+tnload_barren_out float,
+tnload_ldm_out float,
+tnload_mdm_out float,
+tnload_hdm_out float,
+tnload_otherup_out float,
+tnload_farman_out float,
+tnload_tiledrain_out float,
+tnload_streambank_out float,
+tnload_subsurface_out float,
+tnload_pointsource_out float,
+tnload_septics_out float,
+tssload_hp_out float,
+tssload_crop_out float,
+tssload_wooded_out float,
+tssload_open_out float,
+tssload_barren_out float,
+tssload_ldm_out float,
+tssload_mdm_out float,
+tssload_hdm_out float,
+tssload_otherup_out float,
+tssload_tiledrain_out float,
+tssload_streambank_out float
   ) AS
 $BODY$
 
@@ -155,23 +193,7 @@ CONSTRAINT huc12_tmp_primary  PRIMARY KEY (huc12)
 ) ON COMMIT DROP;
 
 
-CREATE TEMP TABLE nhdplus_out 
-(
-comid integer not null,
-hydroseq integer not null,
-dnhydroseq integer not null,
-ShedAreaDrainLake double precision Default 0,
-tploadrate_total  float Default 0,
-tploadrate_total_ups  float Default 0,
-tp_conc                float Default 0,
-tnloadrate_total  float Default 0,
-tnloadrate_total_ups  float Default 0,
-tn_conc                float Default 0,
-tssloadrate_total  float Default 0,
-tssloadrate_total_ups  float Default 0,
-tss_conc  float Default 0,
-CONSTRAINT nhdplus_tmp_primary PRIMARY KEY (comid)
-) ON COMMIT DROP;
+ 
 
 set enable_seqscan = off;
 
@@ -264,151 +286,62 @@ unnest(                tssload_otherup),
 unnest(                tssload_tiledrain),
 unnest(                tssload_streambank )
 ;
-
-Insert into nhdplus_out 
-(
-comid
-,hydroseq
-,dnhydroseq
-,ShedAreaDrainLake
-,tploadrate_total
-,tnloadrate_total
-,tssloadrate_total
-)
-Select 
-x.comid
-,rte.hydroseq
-,rte.dnhydroseq 
-,cfs.ShedAreaDrainLake
-,(
-	(              coalesce(huc12_out.tpload_hp,0)          *             coalesce(p_hay2011catcomid_x_huc12,0) ) +
-	(              coalesce(huc12_out.tpload_Crop,0)        *             coalesce(p_crop2011catcomid_x_huc12,0)) +
-	(              coalesce(huc12_out.tpload_Wooded,0)      *             (  p_decid2011catcomid_x_huc12  +   p_conif2011catcomid_x_huc12)) +
-	(              coalesce(huc12_out.tpload_Open,0)        *             coalesce(p_catarea_x_huc12)) +
-	(              coalesce(huc12_out.tpload_barren,0)      *             coalesce(p_bl2011catcomid_x_huc12,0)  ) +
-	(              coalesce(huc12_out.tpload_ldm,0)         *             coalesce(p_urblo2011catcomid_x_huc12,0)) +
-	(              coalesce(huc12_out.tpload_MDM,0)         *             coalesce(p_urbmd2011catcomid_x_huc12,0)) +
-	(              coalesce(huc12_out.tpload_HDM,0)         *             coalesce(p_urbhi2011catcomid_x_huc12,0)) +
-	(              coalesce(huc12_out.tpload_OtherUp,0)     *             coalesce(p_catarea_x_huc12,0)) +
-	(              coalesce(huc12_out.tpload_FarmAn,0)      *             coalesce(p_catarea_x_huc12,0)) +
-	(              coalesce(huc12_out.tpload_tiledrain,0)   *             coalesce(p_catarea_x_huc12,0)) +
-
--- Stream Bank Is Special	
-	(              coalesce(huc12_out.tpload_streambank,0)  *             coalesce(p_catarea_x_huc12,0) * 0.4 ) +
-	(              coalesce(huc12_out.tpload_streambank,0)  *             coalesce(p_imparea_x_huc12,0) * 0.6 ) +
-	
-	(              coalesce(huc12_out.tpload_subsurface,0)  *             coalesce(p_catarea_x_huc12,0)) +
-	(              coalesce(huc12_out.tpload_pointsource,0) *             coalesce(p_catarea_x_huc12,0)) +
-	(              coalesce(huc12_out.tpload_septics,0)     *             coalesce(p_catarea_x_huc12,0)) 
- ) *   ( 1 - ( (ShedAreaDrainLake/100) * (select  tp from wikiwtershed.retetion_factors) ))
- 
-
-,
-(
-	(              coalesce(huc12_out.tnload_hp,0)          *             coalesce(p_hay2011catcomid_x_huc12,0) ) +
-	(              coalesce(huc12_out.tnload_Crop,0)        *             coalesce(p_crop2011catcomid_x_huc12,0)) +
-	(              coalesce(huc12_out.tnload_Wooded,0)      *             (  p_decid2011catcomid_x_huc12  +   p_conif2011catcomid_x_huc12)) +
-	(              coalesce(huc12_out.tnload_Open,0)        *             coalesce(p_catarea_x_huc12)) +
-	(              coalesce(huc12_out.tnload_barren,0)      *             coalesce(p_bl2011catcomid_x_huc12,0)  ) +
-	(              coalesce(huc12_out.tnload_ldm,0)         *             coalesce(p_urblo2011catcomid_x_huc12,0)) +
-	(              coalesce(huc12_out.tnload_MDM,0)         *             coalesce(p_urbmd2011catcomid_x_huc12,0)) +
-	(              coalesce(huc12_out.tnload_HDM,0)         *             coalesce(p_urbhi2011catcomid_x_huc12,0)) +
-	(              coalesce(huc12_out.tnload_OtherUp,0)     *             coalesce(p_catarea_x_huc12,0)) +
-	(              coalesce(huc12_out.tnload_FarmAn,0)      *             coalesce(p_catarea_x_huc12,0)) +
-	(              coalesce(huc12_out.tnload_tiledrain,0)   *             coalesce(p_catarea_x_huc12,0)) +
-
--- Stream Bank Is Special	
-	(              coalesce(huc12_out.tnload_streambank,0)  *             coalesce(p_catarea_x_huc12,0) * 0.4 ) +
-	(              coalesce(huc12_out.tnload_streambank,0)  *             coalesce(p_imparea_x_huc12,0) * 0.6 ) +
-	
-	(              coalesce(huc12_out.tnload_subsurface,0)  *             coalesce(p_catarea_x_huc12,0)) +
-	(              coalesce(huc12_out.tnload_pointsource,0) *             coalesce(p_catarea_x_huc12,0)) +
-	(              coalesce(huc12_out.tnload_septics,0)     *             coalesce(p_catarea_x_huc12,0)) 
-) *   ( 1 - ( (ShedAreaDrainLake/100) * (select  tn from wikiwtershed.retetion_factors) ))
-
-
-,
-(
-	(              coalesce(huc12_out.tssload_hp,0)          *             coalesce(p_hay2011catcomid_x_huc12,0) ) +
-	(              coalesce(huc12_out.tssload_Crop,0)        *             coalesce(p_crop2011catcomid_x_huc12,0)) +
-	(              coalesce(huc12_out.tssload_Wooded,0)      *             (  p_decid2011catcomid_x_huc12  +   p_conif2011catcomid_x_huc12)) +
-	(              coalesce(huc12_out.tssload_Open,0)        *             coalesce(p_catarea_x_huc12)) +
-	(              coalesce(huc12_out.tssload_barren,0)      *             coalesce(p_bl2011catcomid_x_huc12,0)  ) +
-	(              coalesce(huc12_out.tssload_ldm,0)         *             coalesce(p_urblo2011catcomid_x_huc12,0)) +
-	(              coalesce(huc12_out.tssload_MDM,0)         *             coalesce(p_urbmd2011catcomid_x_huc12,0)) +
-	(              coalesce(huc12_out.tssload_HDM,0)         *             coalesce(p_urbhi2011catcomid_x_huc12,0)) +
-	(              coalesce(huc12_out.tssload_OtherUp,0)     *             coalesce(p_catarea_x_huc12,0)) +
-	--(              coalesce(huc12_out.tssload_FarmAn,0)      *             coalesce(p_catarea_x_huc12,0)) +
-	(              coalesce(huc12_out.tssload_tiledrain,0)   *             coalesce(p_catarea_x_huc12,0)) +
-	
--- Stream Bank Is Special	
-	(              coalesce(huc12_out.tssload_streambank,0)  *             coalesce(p_catarea_x_huc12,0) * 0.4 ) +
-	(              coalesce(huc12_out.tssload_streambank,0)  *             coalesce(p_imparea_x_huc12,0) * 0.6 )  
-	--(              coalesce(huc12_out.tssload_subsurface,0)  *             coalesce(p_catarea_x_huc12,0)) +
-	--(              coalesce(huc12_out.tssload_pointsource,0) *             coalesce(p_catarea_x_huc12,0)) +
-	--(              coalesce(huc12_out.tssload_septics,0)     *             coalesce(p_catarea_x_huc12,0)) 
-) *   ( 1 - ( (ShedAreaDrainLake/100) * (select  tss from wikiwtershed.retetion_factors) ))
-
-From 
-                wikiwtershed.nhdplus_x_huc12 x 
-                join 
-                huc12_out 
-                on x.huc12 = huc12_out.huc12
-                join
-                wikiwtershed.cache_nhdcoefs cfs
-                on x.comid = cfs.comid
-                join
-                wikiwtershed.nhdplus_stream_nsidx rte
-                ON x.comid=rte.comid
-                ;
-
-
--- Push It Down the tree for every Row..
-
-do 
-$$ 
-declare _r record; 
-begin 
-  for _r in ( select * from nhdplus_out order by hydroseq asc) loop
-    -- Push Down  
-    Update nhdplus_out old
-	Set 
-		 tnloadrate_total = (  tnloadrate_total + Coalesce( tn_plus,0) )
-		,tploadrate_total = (  tploadrate_total + Coalesce( tp_plus,0) )
-		,tssloadrate_total= ( tssloadrate_total + Coalesce(tss_plus,0) )
-    From ( 
-		Select 
-			 tnloadrate_total  * (1 - ( (ShedAreaDrainLake/100) * (select  tn from wikiwtershed.retetion_factors) )) as tn_plus
-			,tploadrate_total  * (1 - ( (ShedAreaDrainLake/100) * (select  tp from wikiwtershed.retetion_factors) )) as tp_plus
-			,tssloadrate_total * (1 - ( (ShedAreaDrainLake/100) * (select tss from wikiwtershed.retetion_factors) )) as tss_plus
-	 
-		From nhdplus_out 
-		where comid = _r.comid
-	 ) new
-    Where old.hydroseq = _r.dnhydroseq; 
-
-    
-  end loop; 
-end; 
-$$
-;
  
 set enable_seqscan = on;
 
 Return Query 
 Select 
-	comid, 
-	tploadrate_total,  tp_conc, 
-	tnloadrate_total,  tn_conc, 
-	tssloadrate_total, tss_conc 
-From nhdplus_out;
+huc12, 
+tpload_hp_att,
+tpload_Crop_att ,
+tpload_Wooded_att ,
+tpload_Open_att ,
+tpload_barren_att ,
+tpload_ldm_att ,
+tpload_MDM_att ,
+tpload_HDM_att ,
+tpload_OtherUp_att ,
+tpload_FarmAn_att ,
+tpload_tiledrain_att ,
+tpload_streambank_att ,
+tpload_subsurface_att ,
+tpload_pointsource_att ,
+tpload_septics_att ,
+tnload_hp_att ,
+tnload_crop_att ,
+tnload_wooded_att ,
+tnload_open_att ,
+tnload_barren_att ,
+tnload_ldm_att ,
+tnload_mdm_att ,
+tnload_hdm_att ,
+tnload_otherup_att ,
+tnload_farman_att ,
+tnload_tiledrain_att ,
+tnload_streambank_att ,
+tnload_subsurface_att ,
+tnload_pointsource_att ,
+tnload_septics_att ,
+tssload_hp_att ,
+tssload_crop_att ,
+tssload_wooded_att ,
+tssload_open_att ,
+tssload_barren_att ,
+tssload_ldm_att ,
+tssload_mdm_att ,
+tssload_hdm_att ,
+tssload_otherup_att ,
+tssload_tiledrain_att ,
+tssload_streambank_att 
+
+From huc12_out;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
-GRANT EXECUTE ON FUNCTION wikiwtershed.srat_nhd
+GRANT EXECUTE ON FUNCTION wikiwtershed.srat_huc12
 (
 huc12a character varying[],
 tpload_hp float [],
@@ -458,7 +391,7 @@ TO ms_select;
 
 
 
-Select  wikiwtershed.srat_nhd
+Select  wikiwtershed.srat_huc12
 ( array_agg(huc12) 
 , array_agg(tmp)  
 , array_agg(tmp)
