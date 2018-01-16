@@ -100,7 +100,7 @@ $BODY$
 
 BEGIN
 
-Drop Table If Exists nhdplus_out,huc12_out;
+Drop Table If Exists huc12_out;
 
 -- Create Temporary Output Tables 
 CREATE TEMP TABLE huc12_out 
@@ -286,6 +286,65 @@ unnest(                tssload_otherup),
 unnest(                tssload_tiledrain),
 unnest(                tssload_streambank )
 ;
+
+-- Send in the outputs
+
+Update huc12_out old
+Set 
+	tpload_hp_att = old.tpload_hp * new.hay2011_tp_att_coef,
+	tpload_Crop_att = old.tpload_Crop * new.crop2011_tp_att_coef     ,
+	--tpload_Wooded_att = old. ,
+	tpload_Open_att = old.tpload_Open * new.ow2011_tp_att_coef,
+	tpload_barren_att = old.tpload_barren_att * new.bl2011_tp_att_coef ,
+	tpload_ldm_att = old.tpload_ldm * new.urblo2011_tp_att_coef ,
+	tpload_MDM_att = old.tpload_MDM * new.urbmd2011_tp_att_coef ,
+	tpload_HDM_att = old.tpload_HDM * new.urbhi2011_tp_att_coef ,
+	--tpload_OtherUp_att ,
+	--tpload_FarmAn_att ,
+	--tpload_tiledrain_att ,
+	--tpload_streambank_att ,
+	--tpload_subsurface_att ,
+	--tpload_pointsource_att ,
+	--tpload_septics_att 
+
+	tnload_hp_att = old.tnload_hp * new.hay2011_tn_att_coef,
+	tnload_Crop_att = old.tnload_Crop * new.crop2011_tn_att_coef     ,
+	--tnload_Wooded_att = old. ,
+	tnload_Open_att = old.tnload_Open * new.ow2011_tn_att_coef,
+	tnload_barren_att = old.tnload_barren_att * new.bl2011_tn_att_coef ,
+	tnload_ldm_att = old.tnload_ldm * new.urblo2011_tn_att_coef ,
+	tnload_MDM_att = old.tnload_MDM * new.urbmd2011_tn_att_coef ,
+	tnload_HDM_att = old.tnload_HDM * new.urbhi2011_tn_att_coef ,
+	--tnload_OtherUp_att ,
+	--tnload_FarmAn_att ,
+	--tnload_tiledrain_att ,
+	--tnload_streambank_att ,
+	--tnload_subsurface_att ,
+	--tnload_pointsource_att ,
+	--tnload_septics_att
+
+
+	tssload_hp_att = old.tssload_hp * new.hay2011_tss_att_coef,
+	tssload_Crop_att = old.tssload_Crop * new.crop2011_tss_att_coef     ,
+	--tssload_Wooded_att = old. ,
+	tssload_Open_att = old.tssload_Open * new.ow2011_tss_att_coef,
+	tssload_barren_att = old.tssload_barren_att * new.bl2011_tss_att_coef ,
+	tssload_ldm_att = old.tssload_ldm * new.urblo2011_tss_att_coef ,
+	tssload_MDM_att = old.tssload_MDM * new.urbmd2011_tss_att_coef ,
+	tssload_HDM_att = old.tssload_HDM * new.urbhi2011_tss_att_coef 
+	--tssload_OtherUp_att ,
+	--tssload_FarmAn_att ,
+	--tssload_tiledrain_att ,
+	--tssload_streambank_att ,
+	--tssload_subsurface_att ,
+	--tssload_pointsource_att ,
+	--tssload_septics_att 
+	 
+From 
+wikiwtershed.huc12_att new
+Where old.huc12=new.huc12;
+
+
  
 set enable_seqscan = on;
 
@@ -444,7 +503,7 @@ From
 Select distinct
 huc12, 10 tmp 
 From wikiwtershed.cache_nhdcoefs where huc12 like '020402%'
-Limit 10
+Limit 1000
 --From wikiwtershed.cache_nhdcoefs where huc12 in  ('010100020101','010100020102','010100020103')
 )t  ;
 
