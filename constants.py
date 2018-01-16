@@ -3,7 +3,7 @@ schema = {
     "items": {
         "type": "object",
         "properties": {
-            "huc12": {"type": "integer", "minimum": 0, "maximum": 999999999999},
+            "huc12": {"type": "string", "pattern": "^[0-9]{1,12}$"},
             "tpload_hp": {"type": "number"},
             "tpload_Crop": {"type": "number"},
             "tpload_Wooded": {"type": "number"},
@@ -93,7 +93,7 @@ schema = {
     }
 }
 
-column_numbers = {
+huc12_column_numbers = {
     "huc12": 0,
     "tpload_hp": 1,
     "tpload_Crop": 2,
@@ -136,4 +136,14 @@ column_numbers = {
     "tssload_otherup": 39,
     "tssload_tiledrain": 40,
     "tssload_streambank": 41,
+}
+
+comid_column_numbers = {
+    "comid": 0,
+    "tploadrate_total": 1,
+    "tploadate_conc": 2,
+    "tnloadrate_total": 3,
+    "tnloadrate_conc": 4,
+    "tssloadrate_total": 5,
+    "tssloadrate_conc": 6
 }

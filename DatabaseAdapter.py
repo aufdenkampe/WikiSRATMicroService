@@ -1,5 +1,6 @@
 import psycopg2
-from constants import column_numbers
+from constants import huc12_column_numbers
+from constants import comid_column_numbers
 
 
 class DatabaseAdapter:
@@ -12,17 +13,17 @@ class DatabaseAdapter:
     @classmethod
     def python_to_array(self, python_object):
         result = []
-        for _ in range(0, len(column_numbers)):  # create an array of arrays without numpy
+        for _ in range(0, len(huc12_column_numbers)):  # create an array of arrays without numpy
             result.append([])
         for huc12 in python_object:
             for attribute, value in huc12.items():
-                result[column_numbers[attribute]].append(value)
+                result[huc12_column_numbers[attribute]].append(value)
         return result
 
     @classmethod
-    def array_to_python(self, array):
+    def huc12_array_to_python(self, array):
         result = []
-        column_number_to_name = dict((v, k) for k, v in column_numbers.items())
+        column_number_to_name = dict((v, k) for k, v in huc12_column_numbers.items())
         for _ in range(0, len(array[0])):
             result.append({})  # prep the right number of empty huc12 objects
         for i, attribute_array in enumerate(array):
@@ -31,6 +32,17 @@ class DatabaseAdapter:
         return result
 
     @classmethod
+    def comid_array_to_python(self, array):
+        result = []
+        column_number_to_name = dict((v, k) for k, v in comid_column_numbers.items())
+        for _ in range(0, len(array)):
+            result.append({})  # prep the right number of empty huc12 objects
+        for i, comid in enumerate(array):
+            for j, attribute in enumerate(comid):
+                result[i][column_number_to_name[j]] = attribute
+        return result
+
     def run_model(self, input_array):
-        """input is the array of data, output should be the result of the query"""
-        return "output string"
+        cur = self.conn.cursor()
+        cur.callproc('wikiwtershed.srat_nhd', input_array)
+        return {"huc12s": [], "comids": self.comid_array_to_python(cur.fetchall())}
