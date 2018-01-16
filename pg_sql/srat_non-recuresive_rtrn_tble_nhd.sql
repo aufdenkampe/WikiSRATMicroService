@@ -395,6 +395,7 @@ $$
  
 set enable_seqscan = on;
 
+Return Query 
 Select 
 	comid, 
 	tploadrate_total,  tp_conc, 
@@ -454,3 +455,65 @@ tssload_streambank float []
 )
 
 TO ms_select;
+
+
+
+Select  wikiwtershed.srat_nhd
+( array_agg(huc12) 
+, array_agg(tmp)  
+, array_agg(tmp)
+, array_agg(tmp) 
+, array_agg(tmp)
+, array_agg(tmp) 
+, array_agg(tmp)
+, array_agg(tmp) 
+, array_agg(tmp)
+, array_agg(tmp) 
+, array_agg(tmp)
+
+, array_agg(tmp) 
+, array_agg(tmp)
+, array_agg(tmp) 
+, array_agg(tmp)
+, array_agg(tmp) 
+, array_agg(tmp)
+, array_agg(tmp) 
+, array_agg(tmp)
+, array_agg(tmp) 
+, array_agg(tmp)
+
+, array_agg(tmp) 
+, array_agg(tmp)
+, array_agg(tmp) 
+, array_agg(tmp)
+, array_agg(tmp) 
+, array_agg(tmp)
+, array_agg(tmp) 
+, array_agg(tmp)
+, array_agg(tmp) 
+, array_agg(tmp)
+
+, array_agg(tmp) 
+, array_agg(tmp)
+, array_agg(tmp) 
+, array_agg(tmp)
+, array_agg(tmp) 
+, array_agg(tmp)
+, array_agg(tmp) 
+, array_agg(tmp)
+, array_agg(tmp) 
+, array_agg(tmp)
+
+, array_agg(tmp)
+)
+From
+(
+Select distinct
+huc12, 10 tmp 
+From wikiwtershed.cache_nhdcoefs where huc12 like '020402%'
+Limit 10
+--From wikiwtershed.cache_nhdcoefs where huc12 in  ('010100020101','010100020102','010100020103')
+)t  ;
+
+
+
