@@ -53,24 +53,14 @@ tssload_streambank float []
 
 )
   RETURNS TABLE(
-	comid int, 
-	tploadrate_total float, tploadrate_conc float, 
-	tnloadrate_total float, tnloadrate_conc float, 
-	tssloadrate_total float, tssloadrate_conc float
+	comid2 int, 
+	tploadrate_total2 float, tploadrate_conc2 float, 
+	tnloadrate_total2 float, tnloadrate_conc2 float, 
+	tssloadrate_total2 float, tssloadrate_conc2 float
   ) AS
 $BODY$
-Declare varout text;
-
---Declare _tn_coef double precision;
---Declare _tp_coef double precision;
---Declare _tss_coef double precision;	
 
 BEGIN
-
---_tn_coef := (select tn from wikiwtershed.retetion_factors);
---_tp_coef := (select tp from wikiwtershed.retetion_factors);
---_tss_coef := (select tss from wikiwtershed.retetion_factors);
-
 
 Drop Table If Exists nhdplus_out,huc12_out;
 
@@ -182,8 +172,6 @@ tssloadrate_total_ups  float Default 0,
 tss_conc  float Default 0,
 CONSTRAINT nhdplus_tmp_primary PRIMARY KEY (comid)
 ) ON COMMIT DROP;
-
- 
 
 set enable_seqscan = off;
 
@@ -361,8 +349,6 @@ x.comid
 	--(              coalesce(huc12_out.tssload_septics,0)     *             coalesce(p_catarea_x_huc12,0)) 
 ) *   ( 1 - ( ShedAreaDrainLake * (select  tss from wikiwtershed.retetion_factors) ))
 
- 
-
 From 
                 wikiwtershed.nhdplus_x_huc12 x 
                 join 
@@ -377,8 +363,7 @@ From
                 ;
 
 
--- Push It Down
-
+-- Push It Down the tree for every Row..
 
 do 
 $$ 
@@ -412,17 +397,15 @@ set enable_seqscan = on;
 
 Select 
 	comid, 
-	tploadrate_total,  tploadrate_conc, 
-	tnloadrate_total,  tnloadrate_conc, 
-	tssloadrate_total, tssloadrate_conc 
+	tploadrate_total,  tp_conc, 
+	tnloadrate_total,  tn_conc, 
+	tssloadrate_total, tss_conc 
 From nhdplus_out;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
-
-
 
 GRANT EXECUTE ON FUNCTION wikiwtershed.srat_nhd
 (
