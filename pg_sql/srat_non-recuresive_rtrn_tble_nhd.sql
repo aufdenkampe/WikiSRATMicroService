@@ -393,6 +393,20 @@ end;
 $$
 ;
  
+
+-- convert to cubic feet multiple times seconds in a year
+-- 31557600 (365.25*24*60*60)
+-- 28.3168 liters in a cubic foot
+-- 1000000 mg in kg
+
+Update nhdplus_out old
+	Set 
+		tp_conc  = ( tploadrate_total  * 1000000 ) / ( new.qe_ma * 31557600 * 28.3168 ),
+		tn_conc  = ( tnloadrate_total  * 1000000 ) / ( new.qe_ma * 31557600 * 28.3168 ),
+		tss_conc = ( tssloadrate_total * 1000000 ) / ( new.qe_ma * 31557600 * 28.3168 )
+From wikiwtershed.cache_nhdcoefs new
+Where new.comid = old.comid;
+
 set enable_seqscan = on;
 
 Return Query 
