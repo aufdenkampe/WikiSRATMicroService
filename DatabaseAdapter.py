@@ -55,7 +55,7 @@ class DatabaseAdapter:
     def join_huc12s__and_comids_(self, huc12s, comids):
         comids_dictionary = self.comid_array_to_dictionary(comids)
         for huc12 in huc12s:
-            huc12["comids"] = self.comid_array_to_dictionary(
+            huc12["catchments"] = self.comid_array_to_dictionary(
                 list(map(lambda comid: comids_dictionary[comid], huc12["comids"])))
         return huc12s
 
