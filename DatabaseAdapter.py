@@ -56,7 +56,7 @@ class DatabaseAdapter:
         comids_dictionary = self.comid_array_to_dictionary(comids)
         for huc12 in huc12s:
             huc12["catchments"] = self.comid_array_to_dictionary(
-                list(map(lambda comid: comids_dictionary[comid], huc12["comids"])))
+                list(map(lambda comid: comids_dictionary[comid], huc12["catchments"])))
         return huc12s
 
     def run_model(self, input_array):

@@ -136,7 +136,7 @@ huc12_returned_column_numbers = {
     "tssload_otherup": 39,
     "tssload_tiledrain": 40,
     "tssload_streambank": 41,
-    "comids": 42
+    "catchments": 42
 }
 
 huc12_column_numbers = {
