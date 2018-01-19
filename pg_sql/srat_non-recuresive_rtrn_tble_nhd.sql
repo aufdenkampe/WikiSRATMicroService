@@ -364,12 +364,13 @@ From
 
 
 -- Push It Down the tree for every Row..
+--
 
 do 
 $$ 
 declare _r record; 
 begin 
-  for _r in ( select * from nhdplus_out order by hydroseq desc) loop
+  for _r in ( select * from nhdplus_out order by hydroseq desc ) loop
     -- Push Down  
     Update nhdplus_out old
 	Set 

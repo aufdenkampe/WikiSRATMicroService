@@ -22,6 +22,7 @@ tpload_tiledrain float [],
 tpload_streambank float [],
 tpload_subsurface float [],
 tpload_pointsource float [],
+
 tpload_septics float [],
 tnload_hp float [],
 tnload_crop float [],
@@ -292,36 +293,36 @@ unnest(                tssload_streambank )
 
 Update huc12_out old
 Set 
-	tpload_hp_att = old.tpload_hp * new.hay2011_tp_att_coef,
-	tpload_Crop_att = old.tpload_Crop * new.crop2011_tp_att_coef     ,
+	tpload_hp_att 		= old.tpload_hp 	* new.hay2011_tp_att_coef,
+	tpload_Crop_att 	= old.tpload_Crop 	* new.crop2011_tp_att_coef,
 	--tpload_Wooded_att = old. ,
-	tpload_Open_att = old.tpload_Open * new.ow2011_tp_att_coef,
-	tpload_barren_att = old.tpload_barren_att * new.bl2011_tp_att_coef ,
-	tpload_ldm_att = old.tpload_ldm * new.urblo2011_tp_att_coef ,
-	tpload_MDM_att = old.tpload_MDM * new.urbmd2011_tp_att_coef ,
-	tpload_HDM_att = old.tpload_HDM * new.urbhi2011_tp_att_coef ,
+	tpload_Open_att 	= old.tpload_Open 	* new.ow2011_tp_att_coef,
+	tpload_barren_att 	= old.tpload_barren 	* new.bl2011_tp_att_coef,
+	tpload_ldm_att 		= old.tpload_ldm 	* new.urblo2011_tp_att_coef,
+	tpload_MDM_att 		= old.tpload_MDM 	* new.urbmd2011_tp_att_coef,
+	tpload_HDM_att 		= old.tpload_HDM 	* new.urbhi2011_tp_att_coef,
 	--tpload_OtherUp_att ,
 	--tpload_FarmAn_att ,
 	--tpload_tiledrain_att ,
 	--tpload_streambank_att ,
 	--tpload_subsurface_att ,
-	--tpload_pointsource_att ,
+	tpload_pointsource_att = old.tpload_pointsource * new.pt_2011_tp_att_coef   ,
 	--tpload_septics_att 
 
-	tnload_hp_att = old.tnload_hp * new.hay2011_tn_att_coef,
-	tnload_Crop_att = old.tnload_Crop * new.crop2011_tn_att_coef     ,
+	tnload_hp_att 		= old.tnload_hp 	* new.hay2011_tn_att_coef,
+	tnload_Crop_att 	= old.tnload_Crop 	* new.crop2011_tn_att_coef     ,
 	--tnload_Wooded_att = old. ,
-	tnload_Open_att = old.tnload_Open * new.ow2011_tn_att_coef,
-	tnload_barren_att = old.tnload_barren_att * new.bl2011_tn_att_coef ,
-	tnload_ldm_att = old.tnload_ldm * new.urblo2011_tn_att_coef ,
-	tnload_MDM_att = old.tnload_MDM * new.urbmd2011_tn_att_coef ,
-	tnload_HDM_att = old.tnload_HDM * new.urbhi2011_tn_att_coef ,
+	tnload_Open_att 	= old.tnload_Open 	* new.ow2011_tn_att_coef,
+	tnload_barren_att 	= old.tnload_barren 	* new.bl2011_tn_att_coef ,
+	tnload_ldm_att 		= old.tnload_ldm 	* new.urblo2011_tn_att_coef ,
+	tnload_MDM_att 		= old.tnload_MDM 	* new.urbmd2011_tn_att_coef ,
+	tnload_HDM_att 		= old.tnload_HDM 	* new.urbhi2011_tn_att_coef ,
 	--tnload_OtherUp_att ,
 	--tnload_FarmAn_att ,
 	--tnload_tiledrain_att ,
 	--tnload_streambank_att ,
 	--tnload_subsurface_att ,
-	--tnload_pointsource_att ,
+	tnload_pointsource_att = old.tnload_pointsource * new.pt_2011_tn_att_coef  ,
 	--tnload_septics_att
 
 
@@ -515,8 +516,8 @@ From
 (
 Select distinct
 huc12, 10 tmp 
-From wikiwtershed.cache_nhdcoefs where huc12 like '020402%'
-Limit 1000
+From wikiwtershed.cache_nhdcoefs where huc12 like '010400010606'
+ 
 --From wikiwtershed.cache_nhdcoefs where huc12 in  ('010100020101','010100020102','010100020103')
 )t  ;
 
