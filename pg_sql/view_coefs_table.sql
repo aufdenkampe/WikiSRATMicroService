@@ -113,8 +113,30 @@ CREATE OR replace VIEW wikiwtershed.nhdcoefs AS
                                 COALESCE(CASE 
  					WHEN sum(tmp.hbwet2011cat) OVER (partition BY tmp.huc12) > 0::DOUBLE PRECISION THEN tmp.hbwet2011cat / sum(tmp.hbwet2011cat) OVER (partition BY tmp.huc12)
                                                 ELSE NULL::DOUBLE PRECISION
-                                END,0) AS p_hbwet2011catcomid_x_huc12 , 
+                                END,0) AS p_hbwet2011catcomid_x_huc12 ,
+
+
+-- Add in the point source 1-19-18
+                                COALESCE(CASE 
+ 					WHEN sum(pt.pt_kgn_yr) OVER (partition BY tmp.huc12) > 0::DOUBLE PRECISION THEN pt.pt_kgn_yr / sum(pt.pt_kgn_yr) OVER (partition BY tmp.huc12)
+                                                ELSE NULL::DOUBLE PRECISION
+                                END,0) AS p_pt_kgn_yr_x_huc12,
+
+                                COALESCE(CASE 
+ 					WHEN sum(pt.pt_kgp_yr) OVER (partition BY tmp.huc12) > 0::DOUBLE PRECISION THEN pt.pt_kgp_yr / sum(pt.pt_kgp_yr) OVER (partition BY tmp.huc12)
+                                                ELSE NULL::DOUBLE PRECISION
+                                END,0) AS p_pt_kgp_yr_x_huc12,
+                                
+                                 
                                 t1.qe_ma 
                 FROM            tmp 
-                LEFT OUTER JOIN wikiwtershed.nhdplus_stream t1 
-                ON              tmp.comid=t1.comid;ALTER TABLE wikiwtershed.nhdcoefs owner TO drwiadmin;
+                LEFT OUTER JOIN wikiwtershed.nhdplus_stream t1
+
+                ON              tmp.comid=t1.comid
+                LEFT OUTER JOIN 
+                (Select comid, sum(kgn_yr) as pt_kgn_yr, sum(kgp_yr) as pt_kgp_yr From wikiwtershed.ms_pointsource group by comid) pt 
+		ON              tmp.comid=pt.comid
+;ALTER TABLE wikiwtershed.nhdcoefs owner TO drwiadmin;
+
+
+                

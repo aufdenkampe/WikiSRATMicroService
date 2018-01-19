@@ -2,7 +2,7 @@
 -- Function: wikiwtershed.srat_strmbank(character varying[], double precision[])
 -- To Do Calculate total sum for each reach
 
-
+SET SESSION AUTHORIZATION 'drwiadmin';
 -- DROP FUNCTION wikiwtershed.srat_tst(character varying[]);
 
 CREATE OR REPLACE FUNCTION wikiwtershed.srat_nhd
@@ -298,7 +298,7 @@ x.comid
 	(              coalesce(huc12_out.tpload_streambank,0)  *             coalesce(p_imparea_x_huc12,0) * 0.6 ) +
 	
 	(              coalesce(huc12_out.tpload_subsurface,0)  *             coalesce(p_catarea_x_huc12,0)) +
-	(              coalesce(huc12_out.tpload_pointsource,0) *             coalesce(p_catarea_x_huc12,0)) +
+	(              coalesce(huc12_out.tpload_pointsource,0) *             coalesce(p_pt_kgp_yr_x_huc12,0)) +
 	(              coalesce(huc12_out.tpload_septics,0)     *             coalesce(p_catarea_x_huc12,0)) 
  ) *   ( 1 - ( (ShedAreaDrainLake/100) * (select  tp from wikiwtershed.retetion_factors) ))
  
@@ -322,7 +322,7 @@ x.comid
 	(              coalesce(huc12_out.tnload_streambank,0)  *             coalesce(p_imparea_x_huc12,0) * 0.6 ) +
 	
 	(              coalesce(huc12_out.tnload_subsurface,0)  *             coalesce(p_catarea_x_huc12,0)) +
-	(              coalesce(huc12_out.tnload_pointsource,0) *             coalesce(p_catarea_x_huc12,0)) +
+	(              coalesce(huc12_out.tnload_pointsource,0) *             coalesce(p_pt_kgn_yr_x_huc12,0)) +
 	(              coalesce(huc12_out.tnload_septics,0)     *             coalesce(p_catarea_x_huc12,0)) 
 ) *   ( 1 - ( (ShedAreaDrainLake/100) * (select  tn from wikiwtershed.retetion_factors) ))
 
@@ -470,7 +470,7 @@ tssload_streambank float []
 
 TO ms_select;
 
-
+SET SESSION AUTHORIZATION 'ms_select';
 
 Select  wikiwtershed.srat_nhd
 ( array_agg(huc12) 
