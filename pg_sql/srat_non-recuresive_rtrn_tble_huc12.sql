@@ -88,13 +88,13 @@ tssload_hp_out float,
 tssload_crop_out float,
 tssload_wooded_out float,
 tssload_open_out float,
-tssload_barren_out float,
-tssload_ldm_out float,
+tssload_barren_out float,tssload_ldm_out float,
 tssload_mdm_out float,
 tssload_hdm_out float,
 tssload_otherup_out float,
 tssload_tiledrain_out float,
-tssload_streambank_out float
+tssload_streambank_out float,
+comid_out text[]
   ) AS
 $BODY$
 
@@ -189,6 +189,7 @@ tssload_hdm_att  float Default 0,
 tssload_otherup_att  float Default 0,
 tssload_tiledrain_att  float Default 0,
 tssload_streambank_att  float Default 0,
+comid text[],
 CONSTRAINT huc12_tmp_primary  PRIMARY KEY (huc12)
 ) ON COMMIT DROP;
 
@@ -344,8 +345,20 @@ From
 wikiwtershed.huc12_att new
 Where old.huc12=new.huc12;
 
+Update huc12_out old
+set comid = new.comid
+From 
+(
+Select f.huc12 as huc12, array_agg(t1.comid) as comid
+From
+	huc12_out f
+	join
+	wikiwtershed.nhdplus_x_huc12 t1
+on f.huc12 = t1.huc12
+group by f.huc12
+) new	
+Where old.huc12 = new.huc12;
 
- 
 set enable_seqscan = on;
 
 Return Query 
@@ -391,8 +404,8 @@ tssload_mdm_att ,
 tssload_hdm_att ,
 tssload_otherup_att ,
 tssload_tiledrain_att ,
-tssload_streambank_att 
-
+tssload_streambank_att, 
+comid
 From huc12_out;
 
 END;
