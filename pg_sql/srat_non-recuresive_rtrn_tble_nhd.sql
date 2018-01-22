@@ -170,6 +170,8 @@ tn_conc                float Default 0,
 tssloadrate_total  float Default 0,
 tssloadrate_total_ups  float Default 0,
 tss_conc  float Default 0,
+totdasqkm float Default 0,
+areasqkm float Default 0,
 CONSTRAINT nhdplus_tmp_primary PRIMARY KEY (comid)
 ) ON COMMIT DROP;
 
@@ -362,10 +364,15 @@ From
                 ON x.comid=rte.comid
                 ;
 
-
+Update nhdplus_out as old
+Set  totdasqkm 	= new.areasqkm,
+     areasqkm 	= new.areasqkm
+From wikiwtershed.nhdplus_stream new
+where old.comid = new.comid;
 -- Push It Down the tree for every Row..
 --
 
+ 
 do 
 $$ 
 declare _r record; 
@@ -377,12 +384,13 @@ begin
 		 tnloadrate_total = (  tnloadrate_total + Coalesce( tn_plus,0) )
 		,tploadrate_total = (  tploadrate_total + Coalesce( tp_plus,0) )
 		,tssloadrate_total= ( tssloadrate_total + Coalesce(tss_plus,0) )
+		,areasqkm	  = old.areasqkm + new.areasqkm
     From ( 
 		Select 
 			 tnloadrate_total  * (1 - ( (ShedAreaDrainLake/100) * (select  tn from wikiwtershed.retetion_factors) )) as tn_plus
 			,tploadrate_total  * (1 - ( (ShedAreaDrainLake/100) * (select  tp from wikiwtershed.retetion_factors) )) as tp_plus
 			,tssloadrate_total * (1 - ( (ShedAreaDrainLake/100) * (select tss from wikiwtershed.retetion_factors) )) as tss_plus
-	 
+	                ,areasqkm
 		From nhdplus_out 
 		where comid = _r.comid
 	 ) new
@@ -400,14 +408,19 @@ $$
 -- 28.3168 liters in a cubic foot
 -- 1000000 mg in kg
 
-Update nhdplus_out old
+Update 
+	nhdplus_out old
 	Set 
 		tp_conc  = ( tploadrate_total  * 1000000 ) / ( new.qe_ma * 31557600 * 28.3168 ),
 		tn_conc  = ( tnloadrate_total  * 1000000 ) / ( new.qe_ma * 31557600 * 28.3168 ),
 		tss_conc = ( tssloadrate_total * 1000000 ) / ( new.qe_ma * 31557600 * 28.3168 )
 From wikiwtershed.cache_nhdcoefs new
-Where new.comid = old.comid;
-
+Where new.comid = old.comid 
+	And
+		( totdasqkm between (areasqkm * 0.95) And (areasqkm * 1.05) )
+	And
+		new.qe_ma > 0;
+		-- This gives us a 5 percent fudge factor on the upstream s
 set enable_seqscan = on;
 
 Return Query 
@@ -526,7 +539,7 @@ From
 Select distinct
 huc12, 10 tmp 
 From wikiwtershed.cache_nhdcoefs where huc12 like '020402%'
-Limit 10
+--Limit 10
 --From wikiwtershed.cache_nhdcoefs where huc12 in  ('010100020101','010100020102','010100020103')
 )t  ;
 
