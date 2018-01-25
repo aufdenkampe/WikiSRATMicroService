@@ -105,7 +105,7 @@ all_wetland2011cat_tp_att_coef float,
 lowdensity2011cat_tp_att_coef float,
 all_forest2011cat_tp_att_coef float,
 all_farm2011cat_tp_att_coef float,
-
+streambnk_tp_att_coef float,
 
 ow2011_tn_att_coef float,
 ice2011_tn_att_coef float,
@@ -124,13 +124,12 @@ crop2011_tn_att_coef float,
 wdwet2011_tn_att_coef float,
 hbwet2011_tn_att_coef float,
 pt_2011_tn_att_coef float,
--- Add New ones based on convesation with Barry 
 
 all_wetland2011cat_tn_att_coef float,
 lowdensity2011cat_tn_att_coef float,
 all_forest2011cat_tn_att_coef float,
 all_farm2011cat_tn_att_coef float,
-
+streambnk_tn_att_coef float,
 
 
 ow2011_tss_att_coef float,
@@ -150,12 +149,11 @@ crop2011_tss_att_coef float,
 wdwet2011_tss_att_coef float,
 hbwet2011_tss_att_coef float,
 
-
 all_wetland2011cat_tss_att_coef float,
 lowdensity2011cat_tss_att_coef float,
 all_forest2011cat_tss_att_coef float,
-all_farm2011cat_tss_att_coef float
-
+all_farm2011cat_tss_att_coef float,
+streambnk_tss_att_coef float
 
 );
 
@@ -187,6 +185,7 @@ all_wetland2011cat_tp_att_coef,
 lowdensity2011cat_tp_att_coef,
 all_forest2011cat_tp_att_coef,
 all_farm2011cat_tp_att_coef,
+streambnk_tp_att_coef,
 
 ow2011_tn_att_coef,
 ice2011_tn_att_coef,
@@ -210,6 +209,7 @@ all_wetland2011cat_tn_att_coef,
 lowdensity2011cat_tn_att_coef,
 all_forest2011cat_tn_att_coef,
 all_farm2011cat_tn_att_coef,
+streambnk_tn_att_coef,
 
 ow2011_tss_att_coef,
 ice2011_tss_att_coef,
@@ -231,8 +231,8 @@ hbwet2011_tss_att_coef,
 all_wetland2011cat_tss_att_coef,
 lowdensity2011cat_tss_att_coef,
 all_forest2011cat_tss_att_coef,
-all_farm2011cat_tss_att_coef
-
+all_farm2011cat_tss_att_coef,
+streambnk_tss_att_coef
 )
 
 Select 
@@ -260,6 +260,12 @@ sum(coalesce(p_all_wetland2011cat_x_huc12,0) 	* rdc_29),
 sum(coalesce(p_all_lowdensity2011cat_x_huc12,0) * rdc_29),
 sum(coalesce(p_all_forest2011cat_x_huc12,0) 	* rdc_29),
 sum(coalesce(p_all_farm2011cat_x_huc12,0) 	* rdc_29),
+--streambank is special
+(
+( sum(coalesce(p_imparea_x_huc12,0) 	* rdc_29) * 0.60 ) +
+( sum(coalesce(p_catarea_x_huc12,0) 	* rdc_29) * 0.40 )
+),
+
 
 
 sum(coalesce(p_ow2011catcomid_x_huc12,0) 	* rdc_12),
@@ -284,6 +290,13 @@ sum(coalesce(p_all_wetland2011cat_x_huc12,0) 	* rdc_12),
 sum(coalesce(p_all_lowdensity2011cat_x_huc12,0) * rdc_12),
 sum(coalesce(p_all_forest2011cat_x_huc12,0) 	* rdc_12),
 sum(coalesce(p_all_farm2011cat_x_huc12,0) 	* rdc_12),
+--streambank is special
+(
+( sum(coalesce(p_imparea_x_huc12,0) 	* rdc_12) * 0.60 ) +
+( sum(coalesce(p_catarea_x_huc12,0) 	* rdc_12) * 0.40 )
+),
+
+
 
 sum(coalesce(p_ow2011catcomid_x_huc12,0) 	* rdc_84),
 sum(coalesce(p_ice2011catcomid_x_huc12,0) 	* rdc_84),
@@ -305,7 +318,14 @@ sum(coalesce(p_hbwet2011catcomid_x_huc12,0) 	* rdc_84),
 sum(coalesce(p_all_wetland2011cat_x_huc12,0) 	* rdc_84),
 sum(coalesce(p_all_lowdensity2011cat_x_huc12,0) * rdc_84),
 sum(coalesce(p_all_forest2011cat_x_huc12,0) 	* rdc_84),
-sum(coalesce(p_all_farm2011cat_x_huc12,0) 	* rdc_84)
+sum(coalesce(p_all_farm2011cat_x_huc12,0) 	* rdc_84),
+--streambank is special
+(
+( sum(coalesce(p_imparea_x_huc12,0) 	* rdc_84) * 0.60 ) +
+( sum(coalesce(p_catarea_x_huc12,0) 	* rdc_84) * 0.40 )
+)
+
+
 
 From 
 	wikiwtershed.cache_nhdcoefs ncfs
@@ -320,7 +340,7 @@ Where hcn.Huc12 is not null
 Group By hcn.huc12;	 
 
 	
-Alter Table wikiwtershed.HUC12_att2 add constraint pkhuc12_att2 Primary Key (huc12);
+Alter Table wikiwtershed.HUC12_att2 add constraint pkhuc12_att3 Primary Key (huc12);
 
 grant select on wikiwtershed.HUC12_att  to ms_select;
 
