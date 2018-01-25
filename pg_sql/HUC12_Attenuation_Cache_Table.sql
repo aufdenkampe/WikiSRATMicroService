@@ -76,9 +76,9 @@ ALTER TABLE wikiwtershed.huc12_att_tmptbl1_comidextarray
 
 Select * from wikiwtershed.HUC12_att_tmptbl1_comidextarray limit 100
 
-Drop Table if Exists wikiwtershed.HUC12_att;
+Drop Table if Exists wikiwtershed.HUC12_att2;
 
-Create Table wikiwtershed.HUC12_att
+Create Table wikiwtershed.HUC12_att2
 (
 huc12 character varying not null,
 
@@ -99,6 +99,13 @@ crop2011_tp_att_coef float,
 wdwet2011_tp_att_coef float,
 hbwet2011_tp_att_coef float,
 pt_2011_tp_att_coef float,
+-- Add New ones based on convesation with Barry 
+
+all_wetland2011cat_tp_att_coef float,
+lowdensity2011cat_tp_att_coef float,
+all_forest2011cat_tp_att_coef float,
+all_farm2011cat_tp_att_coef float,
+
 
 ow2011_tn_att_coef float,
 ice2011_tn_att_coef float,
@@ -117,6 +124,14 @@ crop2011_tn_att_coef float,
 wdwet2011_tn_att_coef float,
 hbwet2011_tn_att_coef float,
 pt_2011_tn_att_coef float,
+-- Add New ones based on convesation with Barry 
+
+all_wetland2011cat_tn_att_coef float,
+lowdensity2011cat_tn_att_coef float,
+all_forest2011cat_tn_att_coef float,
+all_farm2011cat_tn_att_coef float,
+
+
 
 ow2011_tss_att_coef float,
 ice2011_tss_att_coef float,
@@ -133,13 +148,21 @@ grs2011_tss_att_coef float,
 hay2011_tss_att_coef float,
 crop2011_tss_att_coef float,
 wdwet2011_tss_att_coef float,
-hbwet2011_tss_att_coef float
+hbwet2011_tss_att_coef float,
+
+
+all_wetland2011cat_tss_att_coef float,
+lowdensity2011cat_tss_att_coef float,
+all_forest2011cat_tss_att_coef float,
+all_farm2011cat_tss_att_coef float
+
+
 );
 
 set enable_seqscan = off; 
 
 
-insert into wikiwtershed.HUC12_att
+insert into wikiwtershed.HUC12_att2
 (
 huc12,
 ow2011_tp_att_coef,
@@ -160,6 +183,11 @@ wdwet2011_tp_att_coef,
 hbwet2011_tp_att_coef,
 pt_2011_tp_att_coef,
 
+all_wetland2011cat_tp_att_coef,
+lowdensity2011cat_tp_att_coef,
+all_forest2011cat_tp_att_coef,
+all_farm2011cat_tp_att_coef,
+
 ow2011_tn_att_coef,
 ice2011_tn_att_coef,
 urbop2011_tn_att_coef,
@@ -178,6 +206,11 @@ wdwet2011_tn_att_coef,
 hbwet2011_tn_att_coef,
 pt_2011_tn_att_coef,
 
+all_wetland2011cat_tn_att_coef,
+lowdensity2011cat_tn_att_coef,
+all_forest2011cat_tn_att_coef,
+all_farm2011cat_tn_att_coef,
+
 ow2011_tss_att_coef,
 ice2011_tss_att_coef,
 urbop2011_tss_att_coef,
@@ -193,7 +226,12 @@ grs2011_tss_att_coef,
 hay2011_tss_att_coef,
 crop2011_tss_att_coef,
 wdwet2011_tss_att_coef,
-hbwet2011_tss_att_coef
+hbwet2011_tss_att_coef,
+
+all_wetland2011cat_tss_att_coef,
+lowdensity2011cat_tss_att_coef,
+all_forest2011cat_tss_att_coef,
+all_farm2011cat_tss_att_coef
 
 )
 
@@ -218,6 +256,12 @@ sum(coalesce(p_wdwet2011catcomid_x_huc12,0) 	* rdc_29),
 sum(coalesce(p_hbwet2011catcomid_x_huc12,0) 	* rdc_29),
 sum(coalesce(p_pt_kgp_yr_x_huc12,0) 		* rdc_29),
 
+sum(coalesce(p_all_wetland2011cat_x_huc12,0) 	* rdc_29),
+sum(coalesce(p_all_lowdensity2011cat_x_huc12,0) * rdc_29),
+sum(coalesce(p_all_forest2011cat_x_huc12,0) 	* rdc_29),
+sum(coalesce(p_all_farm2011cat_x_huc12,0) 	* rdc_29),
+
+
 sum(coalesce(p_ow2011catcomid_x_huc12,0) 	* rdc_12),
 sum(coalesce(p_ice2011catcomid_x_huc12,0) 	* rdc_12),
 sum(coalesce(p_urbop2011catcomid_x_huc12,0) 	* rdc_12),
@@ -236,6 +280,11 @@ sum(coalesce(p_wdwet2011catcomid_x_huc12,0) 	* rdc_12),
 sum(coalesce(p_hbwet2011catcomid_x_huc12,0) 	* rdc_12),
 sum(coalesce(p_pt_kgn_yr_x_huc12	,0) 	* rdc_12),
 
+sum(coalesce(p_all_wetland2011cat_x_huc12,0) 	* rdc_12),
+sum(coalesce(p_all_lowdensity2011cat_x_huc12,0) * rdc_12),
+sum(coalesce(p_all_forest2011cat_x_huc12,0) 	* rdc_12),
+sum(coalesce(p_all_farm2011cat_x_huc12,0) 	* rdc_12),
+
 sum(coalesce(p_ow2011catcomid_x_huc12,0) 	* rdc_84),
 sum(coalesce(p_ice2011catcomid_x_huc12,0) 	* rdc_84),
 sum(coalesce(p_urbop2011catcomid_x_huc12,0) 	* rdc_84),
@@ -251,7 +300,13 @@ sum(coalesce(p_grs2011catcomid_x_huc12,0) 	* rdc_84),
 sum(coalesce(p_hay2011catcomid_x_huc12,0) 	* rdc_84),
 sum(coalesce(p_crop2011catcomid_x_huc12,0) 	* rdc_84),
 sum(coalesce(p_wdwet2011catcomid_x_huc12,0) 	* rdc_84),
-sum(coalesce(p_hbwet2011catcomid_x_huc12,0) 	* rdc_84) 
+sum(coalesce(p_hbwet2011catcomid_x_huc12,0) 	* rdc_84), 
+
+sum(coalesce(p_all_wetland2011cat_x_huc12,0) 	* rdc_84),
+sum(coalesce(p_all_lowdensity2011cat_x_huc12,0) * rdc_84),
+sum(coalesce(p_all_forest2011cat_x_huc12,0) 	* rdc_84),
+sum(coalesce(p_all_farm2011cat_x_huc12,0) 	* rdc_84)
+
 From 
 	wikiwtershed.cache_nhdcoefs ncfs
 	join
@@ -263,10 +318,14 @@ From
 	on ncfs.comid = ncfsa.comid
 Where hcn.Huc12 is not null	
 Group By hcn.huc12;	 
+
 	
-Alter Table wikiwtershed.HUC12_att add constraint pkhuc12_att Primary Key (huc12);
+Alter Table wikiwtershed.HUC12_att2 add constraint pkhuc12_att2 Primary Key (huc12);
 
 grant select on wikiwtershed.HUC12_att  to ms_select;
 
---Select * From wikiwtershed.HUC12_att limit 100
+Drop Table If Exists wikiwtershed.HUC12_att;
+
+Alter Table wikiwtershed.HUC12_att2 Rename TO HUC12_att;
+
  
