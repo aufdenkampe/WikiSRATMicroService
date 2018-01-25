@@ -282,50 +282,50 @@ x.comid
 ,rte.hydroseq
 ,rte.dnhydroseq 
 ,cfs.ShedAreaDrainLake
-,(
+,
+(
 	(              coalesce(huc12_out.tpload_hp,0)          *             coalesce(p_hay2011catcomid_x_huc12,0) ) +
 	(              coalesce(huc12_out.tpload_Crop,0)        *             coalesce(p_crop2011catcomid_x_huc12,0)) +
-	(              coalesce(huc12_out.tpload_Wooded,0)      *             (  p_decid2011catcomid_x_huc12  +   p_conif2011catcomid_x_huc12)) +
-	(              coalesce(huc12_out.tpload_Open,0)        *             coalesce(p_catarea_x_huc12)) +
+	(              coalesce(huc12_out.tpload_Wooded,0)      *             coalesce(p_all_forest2011cat_x_huc12,0)) +
+	(              coalesce(huc12_out.tpload_Open,0)        *             coalesce(p_grs2011catcomid_x_huc12)) +
 	(              coalesce(huc12_out.tpload_barren,0)      *             coalesce(p_bl2011catcomid_x_huc12,0)  ) +
-	(              coalesce(huc12_out.tpload_ldm,0)         *             coalesce(p_urblo2011catcomid_x_huc12,0)) +
+	(              coalesce(huc12_out.tpload_ldm,0)         *             coalesce(p_all_lowdensity2011cat_x_huc12,0)) +
 	(              coalesce(huc12_out.tpload_MDM,0)         *             coalesce(p_urbmd2011catcomid_x_huc12,0)) +
 	(              coalesce(huc12_out.tpload_HDM,0)         *             coalesce(p_urbhi2011catcomid_x_huc12,0)) +
-	(              coalesce(huc12_out.tpload_OtherUp,0)     *             coalesce(p_catarea_x_huc12,0)) +
-	(              coalesce(huc12_out.tpload_FarmAn,0)      *             coalesce(p_catarea_x_huc12,0)) +
-	(              coalesce(huc12_out.tpload_tiledrain,0)   *             coalesce(p_catarea_x_huc12,0)) +
+	(              coalesce(huc12_out.tpload_OtherUp,0)     *             coalesce(p_all_wetland2011cat_x_huc12,0)) +
+	(              coalesce(huc12_out.tpload_FarmAn,0)      *             coalesce(p_all_farm2011cat_x_huc12,0)) +
+	--(              coalesce(huc12_out.tpload_tiledrain,0)   *             coalesce(p_catarea_x_huc12,0)) +
 
 -- Stream Bank Is Special	
 	(              coalesce(huc12_out.tpload_streambank,0)  *             coalesce(p_catarea_x_huc12,0) * 0.4 ) +
 	(              coalesce(huc12_out.tpload_streambank,0)  *             coalesce(p_imparea_x_huc12,0) * 0.6 ) +
 	
-	(              coalesce(huc12_out.tpload_subsurface,0)  *             coalesce(p_catarea_x_huc12,0)) +
-	(              coalesce(huc12_out.tpload_pointsource,0) *             coalesce(p_pt_kgp_yr_x_huc12,0)) +
-	(              coalesce(huc12_out.tpload_septics,0)     *             coalesce(p_catarea_x_huc12,0)) 
- ) *   ( 1 - ( (ShedAreaDrainLake/100) * (select  tp from wikiwtershed.retetion_factors) ))
- 
+--	(              coalesce(huc12_out.tpload_subsurface,0)  *             coalesce(p_catarea_x_huc12,0)) +
+	(              coalesce(huc12_out.tpload_pointsource,0) *             coalesce(p_pt_kgn_yr_x_huc12,0)) +
+	(              coalesce(huc12_out.tpload_septics,0)     *             coalesce(p_all_lowdensity2011cat_x_huc12,0)) 
+) *   ( 1 - ( (ShedAreaDrainLake/100) * (select  tn from wikiwtershed.retetion_factors) ))
 
 ,
 (
 	(              coalesce(huc12_out.tnload_hp,0)          *             coalesce(p_hay2011catcomid_x_huc12,0) ) +
 	(              coalesce(huc12_out.tnload_Crop,0)        *             coalesce(p_crop2011catcomid_x_huc12,0)) +
-	(              coalesce(huc12_out.tnload_Wooded,0)      *             (  p_decid2011catcomid_x_huc12  +   p_conif2011catcomid_x_huc12)) +
-	(              coalesce(huc12_out.tnload_Open,0)        *             coalesce(p_catarea_x_huc12)) +
+	(              coalesce(huc12_out.tnload_Wooded,0)      *             coalesce(p_all_forest2011cat_x_huc12,0)) +
+	(              coalesce(huc12_out.tnload_Open,0)        *             coalesce(p_grs2011catcomid_x_huc12)) +
 	(              coalesce(huc12_out.tnload_barren,0)      *             coalesce(p_bl2011catcomid_x_huc12,0)  ) +
-	(              coalesce(huc12_out.tnload_ldm,0)         *             coalesce(p_urblo2011catcomid_x_huc12,0)) +
+	(              coalesce(huc12_out.tnload_ldm,0)         *             coalesce(p_all_lowdensity2011cat_x_huc12,0)) +
 	(              coalesce(huc12_out.tnload_MDM,0)         *             coalesce(p_urbmd2011catcomid_x_huc12,0)) +
 	(              coalesce(huc12_out.tnload_HDM,0)         *             coalesce(p_urbhi2011catcomid_x_huc12,0)) +
-	(              coalesce(huc12_out.tnload_OtherUp,0)     *             coalesce(p_catarea_x_huc12,0)) +
-	(              coalesce(huc12_out.tnload_FarmAn,0)      *             coalesce(p_catarea_x_huc12,0)) +
-	(              coalesce(huc12_out.tnload_tiledrain,0)   *             coalesce(p_catarea_x_huc12,0)) +
+	(              coalesce(huc12_out.tnload_OtherUp,0)     *             coalesce(p_all_wetland2011cat_x_huc12,0)) +
+	(              coalesce(huc12_out.tnload_FarmAn,0)      *             coalesce(p_all_farm2011cat_x_huc12,0)) +
+	--(              coalesce(huc12_out.tnload_tiledrain,0)   *             coalesce(p_catarea_x_huc12,0)) +
 
 -- Stream Bank Is Special	
 	(              coalesce(huc12_out.tnload_streambank,0)  *             coalesce(p_catarea_x_huc12,0) * 0.4 ) +
 	(              coalesce(huc12_out.tnload_streambank,0)  *             coalesce(p_imparea_x_huc12,0) * 0.6 ) +
 	
-	(              coalesce(huc12_out.tnload_subsurface,0)  *             coalesce(p_catarea_x_huc12,0)) +
+--	(              coalesce(huc12_out.tnload_subsurface,0)  *             coalesce(p_catarea_x_huc12,0)) +
 	(              coalesce(huc12_out.tnload_pointsource,0) *             coalesce(p_pt_kgn_yr_x_huc12,0)) +
-	(              coalesce(huc12_out.tnload_septics,0)     *             coalesce(p_catarea_x_huc12,0)) 
+	(              coalesce(huc12_out.tnload_septics,0)     *             coalesce(p_all_lowdensity2011cat_x_huc12,0)) 
 ) *   ( 1 - ( (ShedAreaDrainLake/100) * (select  tn from wikiwtershed.retetion_factors) ))
 
 
@@ -333,19 +333,19 @@ x.comid
 (
 	(              coalesce(huc12_out.tssload_hp,0)          *             coalesce(p_hay2011catcomid_x_huc12,0) ) +
 	(              coalesce(huc12_out.tssload_Crop,0)        *             coalesce(p_crop2011catcomid_x_huc12,0)) +
-	(              coalesce(huc12_out.tssload_Wooded,0)      *             (  p_decid2011catcomid_x_huc12  +   p_conif2011catcomid_x_huc12)) +
-	(              coalesce(huc12_out.tssload_Open,0)        *             coalesce(p_catarea_x_huc12)) +
+	(              coalesce(huc12_out.tssload_Wooded,0)      *             coalesce(p_all_forest2011cat_x_huc12,0)) +
+	(              coalesce(huc12_out.tssload_Open,0)        *             coalesce(p_grs2011catcomid_x_huc12)) +
 	(              coalesce(huc12_out.tssload_barren,0)      *             coalesce(p_bl2011catcomid_x_huc12,0)  ) +
-	(              coalesce(huc12_out.tssload_ldm,0)         *             coalesce(p_urblo2011catcomid_x_huc12,0)) +
+	(              coalesce(huc12_out.tssload_ldm,0)         *             coalesce(p_all_lowdensity2011cat_x_huc12,0)) +
 	(              coalesce(huc12_out.tssload_MDM,0)         *             coalesce(p_urbmd2011catcomid_x_huc12,0)) +
 	(              coalesce(huc12_out.tssload_HDM,0)         *             coalesce(p_urbhi2011catcomid_x_huc12,0)) +
-	(              coalesce(huc12_out.tssload_OtherUp,0)     *             coalesce(p_catarea_x_huc12,0)) +
-	--(              coalesce(huc12_out.tssload_FarmAn,0)      *             coalesce(p_catarea_x_huc12,0)) +
-	(              coalesce(huc12_out.tssload_tiledrain,0)   *             coalesce(p_catarea_x_huc12,0)) +
-	
+	(              coalesce(huc12_out.tssload_OtherUp,0)     *             coalesce(p_all_wetland2011cat_x_huc12,0)) +
+--	(              coalesce(huc12_out.tssload_FarmAn,0)      *             coalesce(p_all_farm2011cat_x_huc12,0)) +
+	--(              coalesce(huc12_out.tssload_tiledrain,0)   *             coalesce(p_catarea_x_huc12,0)) +
+
 -- Stream Bank Is Special	
 	(              coalesce(huc12_out.tssload_streambank,0)  *             coalesce(p_catarea_x_huc12,0) * 0.4 ) +
-	(              coalesce(huc12_out.tssload_streambank,0)  *             coalesce(p_imparea_x_huc12,0) * 0.6 )  
+	(              coalesce(huc12_out.tssload_streambank,0)  *             coalesce(p_imparea_x_huc12,0) * 0.6 ) 
 	--(              coalesce(huc12_out.tssload_subsurface,0)  *             coalesce(p_catarea_x_huc12,0)) +
 	--(              coalesce(huc12_out.tssload_pointsource,0) *             coalesce(p_catarea_x_huc12,0)) +
 	--(              coalesce(huc12_out.tssload_septics,0)     *             coalesce(p_catarea_x_huc12,0)) 
@@ -539,7 +539,7 @@ From
 Select distinct
 huc12, 10 tmp 
 From wikiwtershed.cache_nhdcoefs where huc12 like '020402%'
---Limit 10
+Limit 1
 --From wikiwtershed.cache_nhdcoefs where huc12 in  ('010100020101','010100020102','010100020103')
 )t  ;
 
