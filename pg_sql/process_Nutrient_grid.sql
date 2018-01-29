@@ -40,5 +40,17 @@ ALTER TABLE wikiwtershed.grndwter_tn_nhdplus
 
 Alter  Table wikiwtershed.grndwter_tn_nhdplus Alter Column SUM Type float using (replace(SUM, ',' ,'' ))::float;
 
+Alter  Table wikiwtershed.grndwter_tn_nhdplus Alter Column comid Type integer using comid::integer;
+
+ 
+
+ALTER TABLE wikiwtershed.grndwter_tn_nhdplus
+  ADD FOREIGN KEY (comid) REFERENCES wikiwtershed.nhdplus_x_huc12 (comid)
+   ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+
+
 
 
