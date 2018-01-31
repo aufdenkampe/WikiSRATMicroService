@@ -1,35 +1,31 @@
 import re
+import json
+from constants import schema
+from jsonschema import validate as jsonvalidate
+from jsonschema import ValidationError
+
 
 class StringParser:
     @classmethod
-    def parse(self,input_string):
+    def parse(self, input_string):
+        parsed = self.string_to_ob(input_string)
+        self.validate(parsed)
+        return parsed
+
+    @classmethod
+    def validate(self, object):
         try:
-            output = [{}]
-            input_variables = re.findall(r'\w+\s\([^)]+\)',input_string)
-            for input_variable in input_variables:
-                try:
-                    variable_name = re.match(r'\w+',input_variable).group(0)
-                except AttributeError:
-                    raise AttributeError("Variable name invalid ("+input_variable+")")
-                try:
-                    data_as_string = re.search(r'\([^)]+\)',input_variable).group(0)
-                except AttributeError:
-                    raise AttributeError("Value string invalid (" + input_variable + ")")
-                data_values = eval(data_as_string)
-                if type(data_values) != tuple:
-                    raise AttributeError("Value string not properly formatted (" + data_as_string + ")")
-                for i,data_value in enumerate(data_values):
-                    if(len(output) < i+1):
-                        if(variable_name == "huc12"):
-                            output.append({})
-                        else:
-                            print(i)
-                            raise AttributeError("Inconsistent number of values (" +variable_name + ")")
-                    output[i][variable_name] = data_value
-            print(output)
-            return output
-        except AttributeError as e:
-            raise e
-        except Exception as e:
-            print(e)
-            raise AttributeError("input string was improperly formatted")
+            jsonvalidate(object, schema)
+        except ValidationError as e:
+            raise AttributeError(e.message)
+
+    @classmethod
+    def string_to_ob(self, input_string):
+        try:
+            return json.loads(input_string)
+        except json.decoder.JSONDecodeError as e:
+            raise AttributeError(e.args[0])
+
+    @classmethod
+    def ob_to_string(self, object_in):
+        return json.dumps(object_in)

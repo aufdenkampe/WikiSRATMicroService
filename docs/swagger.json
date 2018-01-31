@@ -1,0 +1,387 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "API docs for the WikiSRATMicroService",
+    "version": "0.0.1",
+    "title": "WikiSRATMicroService",
+    "termsOfService": ""
+  },
+  "host": "rychrnjrs6.execute-api.us-east-1.amazonaws.com",
+  "basePath": "/prod/",
+  "tags": [
+    {
+      "name": "sratModel",
+      "description": ""
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "name": "x-api-key",
+      "in": "header"
+    }
+  },
+  "paths": {
+    "/SratRunModel": {
+      "post": {
+        "tags": [
+          "sratModel"
+        ],
+        "summary": "Run the model using the data provided",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/huc12"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/huc12Response"
+            }
+          },
+          "400": {
+            "description": "Error with input"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "huc12": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "huc12": {
+            "type": "string",
+            "pattern": "^[0-9]{1,12}$",
+            "example": "020402010101"
+          },
+          "tpload_hp": {
+            "type": "number"
+          },
+          "tpload_Crop": {
+            "type": "number"
+          },
+          "tpload_Wooded": {
+            "type": "number"
+          },
+          "tpload_Open": {
+            "type": "number"
+          },
+          "tpload_barren": {
+            "type": "number"
+          },
+          "tpload_ldm": {
+            "type": "number"
+          },
+          "tpload_MDM": {
+            "type": "number"
+          },
+          "tpload_HDM": {
+            "type": "number"
+          },
+          "tpload_OtherUp": {
+            "type": "number"
+          },
+          "tpload_FarmAn": {
+            "type": "number"
+          },
+          "tpload_tiledrain": {
+            "type": "number"
+          },
+          "tpload_streambank": {
+            "type": "number"
+          },
+          "tpload_subsurface": {
+            "type": "number"
+          },
+          "tpload_pointsource": {
+            "type": "number"
+          },
+          "tpload_septics": {
+            "type": "number"
+          },
+          "tnload_hp": {
+            "type": "number"
+          },
+          "tnload_crop": {
+            "type": "number"
+          },
+          "tnload_wooded": {
+            "type": "number"
+          },
+          "tnload_open": {
+            "type": "number"
+          },
+          "tnload_barren": {
+            "type": "number"
+          },
+          "tnload_ldm": {
+            "type": "number"
+          },
+          "tnload_mdm": {
+            "type": "number"
+          },
+          "tnload_hdm": {
+            "type": "number"
+          },
+          "tnload_otherup": {
+            "type": "number"
+          },
+          "tnload_farman": {
+            "type": "number"
+          },
+          "tnload_tiledrain": {
+            "type": "number"
+          },
+          "tnload_streambank": {
+            "type": "number"
+          },
+          "tnload_subsurface": {
+            "type": "number"
+          },
+          "tnload_pointsource": {
+            "type": "number"
+          },
+          "tnload_septics": {
+            "type": "number"
+          },
+          "tssload_hp": {
+            "type": "number"
+          },
+          "tssload_crop": {
+            "type": "number"
+          },
+          "tssload_wooded": {
+            "type": "number"
+          },
+          "tssload_open": {
+            "type": "number"
+          },
+          "tssload_barren": {
+            "type": "number"
+          },
+          "tssload_ldm": {
+            "type": "number"
+          },
+          "tssload_mdm": {
+            "type": "number"
+          },
+          "tssload_hdm": {
+            "type": "number"
+          },
+          "tssload_otherup": {
+            "type": "number"
+          },
+          "tssload_tiledrain": {
+            "type": "number"
+          },
+          "tssload_streambank": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "huc12Response": {
+      "type": "object",
+      "properties": {
+        "huc12s": {
+          "type": "object",
+          "properties": {
+            "<huc12>": {
+              "type": "object",
+              "properties": {
+                "huc12": {
+                  "type": "string",
+                  "pattern": "^[0-9]{1,12}$",
+                  "example": "020402010101"
+                },
+                "tpload_hp_att": {
+                  "type": "number"
+                },
+                "tpload_Crop_att": {
+                  "type": "number"
+                },
+                "tpload_Wooded_att": {
+                  "type": "number"
+                },
+                "tpload_Open_att": {
+                  "type": "number"
+                },
+                "tpload_barren_att": {
+                  "type": "number"
+                },
+                "tpload_ldm_att": {
+                  "type": "number"
+                },
+                "tpload_MDM_att": {
+                  "type": "number"
+                },
+                "tpload_HDM_att": {
+                  "type": "number"
+                },
+                "tpload_OtherUp_att": {
+                  "type": "number"
+                },
+                "tpload_FarmAn_att": {
+                  "type": "number"
+                },
+                "tpload_tiledrain_att": {
+                  "type": "number"
+                },
+                "tpload_streambank_att": {
+                  "type": "number"
+                },
+                "tpload_subsurface_att": {
+                  "type": "number"
+                },
+                "tpload_pointsource_att": {
+                  "type": "number"
+                },
+                "tpload_septics_att": {
+                  "type": "number"
+                },
+                "tnload_hp_att": {
+                  "type": "number"
+                },
+                "tnload_crop_att": {
+                  "type": "number"
+                },
+                "tnload_wooded_att": {
+                  "type": "number"
+                },
+                "tnload_open_att": {
+                  "type": "number"
+                },
+                "tnload_barren_att": {
+                  "type": "number"
+                },
+                "tnload_ldm_att": {
+                  "type": "number"
+                },
+                "tnload_mdm_att": {
+                  "type": "number"
+                },
+                "tnload_hdm_att": {
+                  "type": "number"
+                },
+                "tnload_otherup_att": {
+                  "type": "number"
+                },
+                "tnload_farman_att": {
+                  "type": "number"
+                },
+                "tnload_tiledrain_att": {
+                  "type": "number"
+                },
+                "tnload_streambank_att": {
+                  "type": "number"
+                },
+                "tnload_subsurface_att": {
+                  "type": "number"
+                },
+                "tnload_pointsource_att": {
+                  "type": "number"
+                },
+                "tnload_septics_att": {
+                  "type": "number"
+                },
+                "tssload_hp_att": {
+                  "type": "number"
+                },
+                "tssload_crop_att": {
+                  "type": "number"
+                },
+                "tssload_wooded_att": {
+                  "type": "number"
+                },
+                "tssload_open_att": {
+                  "type": "number"
+                },
+                "tssload_barren_att": {
+                  "type": "number"
+                },
+                "tssload_ldm_att": {
+                  "type": "number"
+                },
+                "tssload_mdm_att": {
+                  "type": "number"
+                },
+                "tssload_hdm_att": {
+                  "type": "number"
+                },
+                "tssload_otherup_att": {
+                  "type": "number"
+                },
+                "tssload_tiledrain_att": {
+                  "type": "number"
+                },
+                "tssload_streambank_att": {
+                  "type": "number"
+                },
+                "catchments": {
+                  "type": "object",
+                  "properties": {
+                    "<comid>": {
+                      "$ref": "#/definitions/comid"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "comid": {
+      "type": "object",
+      "properties": {
+        "comid": {
+          "type": "integer"
+        },
+        "huc12": {
+          "type": "integer"
+        },
+        "tploadrate_total": {
+          "type": "number"
+        },
+        "tp_conc": {
+          "type": "number"
+        },
+        "tnloadrate_total": {
+          "type": "number"
+        },
+        "tn_conc": {
+          "type": "number"
+        },
+        "tssloadrate_total": {
+          "type": "number"
+        },
+        "tss_conc": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}
