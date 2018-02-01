@@ -80,13 +80,13 @@
           "tpload_hp": {
             "type": "number"
           },
-          "tpload_Crop": {
+          "tpload_crop": {
             "type": "number"
           },
-          "tpload_Wooded": {
+          "tpload_wooded": {
             "type": "number"
           },
-          "tpload_Open": {
+          "tpload_open": {
             "type": "number"
           },
           "tpload_barren": {
@@ -95,16 +95,16 @@
           "tpload_ldm": {
             "type": "number"
           },
-          "tpload_MDM": {
+          "tpload_mdm": {
             "type": "number"
           },
-          "tpload_HDM": {
+          "tpload_hdm": {
             "type": "number"
           },
-          "tpload_OtherUp": {
+          "tpload_wetland": {
             "type": "number"
           },
-          "tpload_FarmAn": {
+          "tpload_farman": {
             "type": "number"
           },
           "tpload_tiledrain": {
@@ -146,7 +146,7 @@
           "tnload_hdm": {
             "type": "number"
           },
-          "tnload_otherup": {
+          "tnload_wetland": {
             "type": "number"
           },
           "tnload_farman": {
@@ -191,7 +191,7 @@
           "tssload_hdm": {
             "type": "number"
           },
-          "tssload_otherup": {
+          "tssload_wetland": {
             "type": "number"
           },
           "tssload_tiledrain": {
@@ -220,13 +220,13 @@
                 "tpload_hp_att": {
                   "type": "number"
                 },
-                "tpload_Crop_att": {
+                "tpload_crop_att": {
                   "type": "number"
                 },
-                "tpload_Wooded_att": {
+                "tpload_wooded_att": {
                   "type": "number"
                 },
-                "tpload_Open_att": {
+                "tpload_open_att": {
                   "type": "number"
                 },
                 "tpload_barren_att": {
@@ -235,16 +235,16 @@
                 "tpload_ldm_att": {
                   "type": "number"
                 },
-                "tpload_MDM_att": {
+                "tpload_mdm_att": {
                   "type": "number"
                 },
-                "tpload_HDM_att": {
+                "tpload_hdm_att": {
                   "type": "number"
                 },
-                "tpload_OtherUp_att": {
+                "tpload_wetland_att": {
                   "type": "number"
                 },
-                "tpload_FarmAn_att": {
+                "tpload_farman_att": {
                   "type": "number"
                 },
                 "tpload_tiledrain_att": {
@@ -286,7 +286,7 @@
                 "tnload_hdm_att": {
                   "type": "number"
                 },
-                "tnload_otherup_att": {
+                "tnload_wetland_att": {
                   "type": "number"
                 },
                 "tnload_farman_att": {
@@ -331,7 +331,7 @@
                 "tssload_hdm_att": {
                   "type": "number"
                 },
-                "tssload_otherup_att": {
+                "tssload_wetland_att": {
                   "type": "number"
                 },
                 "tssload_tiledrain_att": {
