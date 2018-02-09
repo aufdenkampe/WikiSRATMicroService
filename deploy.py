@@ -6,7 +6,6 @@ from shutil import rmtree
 def zipdir(path, ziph):
     # ziph is zipfile handle
     for root, dirs, files in os.walk(path):
-        print(root,dirs)
         for file in files:
             ziph.write(os.path.join(root, file),os.path.join(root, file).replace("deploy/",""))
 
