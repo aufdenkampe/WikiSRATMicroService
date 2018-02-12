@@ -4,60 +4,12 @@
 
 SET SESSION AUTHORIZATION 'drwiadmin';
 -- DROP FUNCTION wikiwtershed.srat_tst(character varying[]);
+-- Function: wikiwtershed.srat_nhd(character varying[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[])
 
-CREATE OR REPLACE FUNCTION wikiwtershed.srat_nhd
-(
-huc12a character varying[],
-tpload_hp float [],
-tpload_Crop float [],
-tpload_Wooded float [],
-tpload_Open float [],
-tpload_barren float [],
-tpload_ldm float [],
-tpload_MDM float [],
-tpload_HDM float [],
-tpload_OtherUp float [],
-tpload_FarmAn float [],
-tpload_tiledrain float [],
-tpload_streambank float [],
-tpload_subsurface float [],
-tpload_pointsource float [],
-tpload_septics float [],
-tnload_hp float [],
-tnload_crop float [],
-tnload_wooded float [],
-tnload_open float [],
-tnload_barren float [],
-tnload_ldm float [],
-tnload_mdm float [],
-tnload_hdm float [],
-tnload_otherup float [],
-tnload_farman float [],
-tnload_tiledrain float [],
-tnload_streambank float [],
-tnload_subsurface float [],
-tnload_pointsource float [],
-tnload_septics float [],
-tssload_hp float [],
-tssload_crop float [],
-tssload_wooded float [],
-tssload_open float [],
-tssload_barren float [],
-tssload_ldm float [],
-tssload_mdm float [],
-tssload_hdm float [],
-tssload_otherup float [],
-tssload_tiledrain float [],
-tssload_streambank float []
+-- DROP FUNCTION wikiwtershed.srat_nhd(character varying[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[]);
 
-
-)
-  RETURNS TABLE(
-	comid2 int, 
-	tploadrate_total2 float, tploadrate_conc2 float, 
-	tnloadrate_total2 float, tnloadrate_conc2 float, 
-	tssloadrate_total2 float, tssloadrate_conc2 float
-  ) AS
+CREATE OR REPLACE FUNCTION wikiwtershed.srat_nhd(IN huc12a character varying[], IN tpload_hp double precision[], IN tpload_crop double precision[], IN tpload_wooded double precision[], IN tpload_open double precision[], IN tpload_barren double precision[], IN tpload_ldm double precision[], IN tpload_mdm double precision[], IN tpload_hdm double precision[], IN tpload_otherup double precision[], IN tpload_farman double precision[], IN tpload_tiledrain double precision[], IN tpload_streambank double precision[], IN tpload_subsurface double precision[], IN tpload_pointsource double precision[], IN tpload_septics double precision[], IN tnload_hp double precision[], IN tnload_crop double precision[], IN tnload_wooded double precision[], IN tnload_open double precision[], IN tnload_barren double precision[], IN tnload_ldm double precision[], IN tnload_mdm double precision[], IN tnload_hdm double precision[], IN tnload_otherup double precision[], IN tnload_farman double precision[], IN tnload_tiledrain double precision[], IN tnload_streambank double precision[], IN tnload_subsurface double precision[], IN tnload_pointsource double precision[], IN tnload_septics double precision[], IN tssload_hp double precision[], IN tssload_crop double precision[], IN tssload_wooded double precision[], IN tssload_open double precision[], IN tssload_barren double precision[], IN tssload_ldm double precision[], IN tssload_mdm double precision[], IN tssload_hdm double precision[], IN tssload_otherup double precision[], IN tssload_tiledrain double precision[], IN tssload_streambank double precision[])
+  RETURNS TABLE(comid2 integer, tploadrate_total2 double precision, tploadrate_conc2 double precision, tnloadrate_total2 double precision, tnloadrate_conc2 double precision, tssloadrate_total2 double precision, tssloadrate_conc2 double precision) AS
 $BODY$
 
 BEGIN
@@ -367,7 +319,7 @@ From
 Update nhdplus_out as old
 Set  totdasqkm 	= new.areasqkm,
      areasqkm 	= new.areasqkm
-From wikiwtershed.nhdplus_stream new
+From wikiwtershed.nhdplus_stream_nsidx new
 where old.comid = new.comid;
 -- Push It Down the tree for every Row..
 --
@@ -434,7 +386,14 @@ From nhdplus_out;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
-  COST 100;
+  COST 100
+  ROWS 1000;
+ALTER FUNCTION wikiwtershed.srat_nhd(character varying[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[])
+  OWNER TO drwiadmin;
+GRANT EXECUTE ON FUNCTION wikiwtershed.srat_nhd(character varying[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[]) TO public;
+GRANT EXECUTE ON FUNCTION wikiwtershed.srat_nhd(character varying[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[]) TO drwiadmin;
+GRANT EXECUTE ON FUNCTION wikiwtershed.srat_nhd(character varying[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[]) TO ms_select;
+
 
 GRANT EXECUTE ON FUNCTION wikiwtershed.srat_nhd
 (
