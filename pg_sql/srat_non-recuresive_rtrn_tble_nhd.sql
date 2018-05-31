@@ -245,8 +245,8 @@ x.comid
 -- Stream Bank Is Special	
 	(              coalesce(huc12_out.tpload_streambank,0)  *             coalesce(p_catarea_x_huc12,0) * 0.4 ) +
 	(              coalesce(huc12_out.tpload_streambank,0)  *             coalesce(p_imparea_x_huc12,0) * 0.6 ) +
-	
---	(              coalesce(huc12_out.tpload_subsurface,0)  *             coalesce(p_catarea_x_huc12,0)) +
+	-- add in 5_22_18
+	(              coalesce(huc12_out.tpload_subsurface,0)  *             coalesce(p_tnsumgrnd_x_huc12,0)) +
 	(              coalesce(huc12_out.tpload_pointsource,0) *             coalesce(p_pt_kgn_yr_x_huc12,0)) +
 	(              coalesce(huc12_out.tpload_septics,0)     *             coalesce(p_all_lowdensity2011cat_x_huc12,0)) 
 ) *   ( 1 - ( (ShedAreaDrainLake/100) * (select  tn from wikiwtershed.retetion_factors) ))
@@ -268,8 +268,8 @@ x.comid
 -- Stream Bank Is Special	
 	(              coalesce(huc12_out.tnload_streambank,0)  *             coalesce(p_catarea_x_huc12,0) * 0.4 ) +
 	(              coalesce(huc12_out.tnload_streambank,0)  *             coalesce(p_imparea_x_huc12,0) * 0.6 ) +
-	
---	(              coalesce(huc12_out.tnload_subsurface,0)  *             coalesce(p_catarea_x_huc12,0)) +
+	-- add in 5_22_18
+	(              coalesce(huc12_out.tnload_subsurface,0)  *             coalesce(p_tnsumgrnd_x_huc12,0)) +
 	(              coalesce(huc12_out.tnload_pointsource,0) *             coalesce(p_pt_kgn_yr_x_huc12,0)) +
 	(              coalesce(huc12_out.tnload_septics,0)     *             coalesce(p_all_lowdensity2011cat_x_huc12,0)) 
 ) *   ( 1 - ( (ShedAreaDrainLake/100) * (select  tn from wikiwtershed.retetion_factors) ))
@@ -310,6 +310,17 @@ From
                 ON x.comid=rte.comid
                 ;
 
+
+-- Set the upstream equal to the total before you start
+
+
+update nhdplus_out 
+set 
+	tnloadrate_total_ups = tnloadrate_total,
+	tploadrate_total_ups = tploadrate_total,
+	tssloadrate_total_ups = tssloadrate_total;
+
+
 Update nhdplus_out as old
 Set  totdasqkm 	= new.areasqkm,
      areasqkm 	= new.areasqkm
@@ -327,15 +338,15 @@ begin
     -- Push Down  
     Update nhdplus_out old
 	Set 
-		 tnloadrate_total = (  tnloadrate_total + Coalesce( tn_plus,0) )
-		,tploadrate_total = (  tploadrate_total + Coalesce( tp_plus,0) )
-		,tssloadrate_total= ( tssloadrate_total + Coalesce(tss_plus,0) )
+		 tnloadrate_total_ups = (  tnloadrate_total_ups + Coalesce( tn_plus,0) )
+		,tploadrate_total_ups = (  tploadrate_total_ups + Coalesce( tp_plus,0) )
+		,tssloadrate_total_ups= ( tssloadrate_total_ups + Coalesce(tss_plus,0) )
 		,areasqkm	  = old.areasqkm + new.areasqkm
     From ( 
 		Select 
-			 tnloadrate_total  * (1 - ( (ShedAreaDrainLake/100) * (select  tn from wikiwtershed.retetion_factors) )) as tn_plus
-			,tploadrate_total  * (1 - ( (ShedAreaDrainLake/100) * (select  tp from wikiwtershed.retetion_factors) )) as tp_plus
-			,tssloadrate_total * (1 - ( (ShedAreaDrainLake/100) * (select tss from wikiwtershed.retetion_factors) )) as tss_plus
+			 tnloadrate_total_ups  * (1 - ( (ShedAreaDrainLake/100) * (select  tn from wikiwtershed.retetion_factors) )) as tn_plus
+			,tploadrate_total_ups  * (1 - ( (ShedAreaDrainLake/100) * (select  tp from wikiwtershed.retetion_factors) )) as tp_plus
+			,tssloadrate_total_ups * (1 - ( (ShedAreaDrainLake/100) * (select tss from wikiwtershed.retetion_factors) )) as tss_plus
 	                ,areasqkm
 		From nhdplus_out 
 		where comid = _r.comid
@@ -357,9 +368,9 @@ $$
 Update 
 	nhdplus_out old
 	Set 
-		tp_conc  = ( tploadrate_total  * 1000000 ) / ( new.qe_ma * 31557600 * 28.3168 ),
-		tn_conc  = ( tnloadrate_total  * 1000000 ) / ( new.qe_ma * 31557600 * 28.3168 ),
-		tss_conc = ( tssloadrate_total * 1000000 ) / ( new.qe_ma * 31557600 * 28.3168 )
+		tp_conc  = ( tploadrate_total_ups  * 1000000 ) / ( new.qe_ma * 31557600 * 28.3168 ),
+		tn_conc  = ( tnloadrate_total_ups  * 1000000 ) / ( new.qe_ma * 31557600 * 28.3168 ),
+		tss_conc = ( tssloadrate_total_ups * 1000000 ) / ( new.qe_ma * 31557600 * 28.3168 )
 From wikiwtershed.cache_nhdcoefs new
 Where new.comid = old.comid 
 	And
