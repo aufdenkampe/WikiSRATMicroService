@@ -305,7 +305,8 @@ Set
 	tpload_FarmAn_att 	= old.tpload_FarmAn 	* new.all_farm2011cat_tp_att_coef,
 --	tpload_tiledrain_att ,
 	tpload_streambank_att 	= old.tpload_streambank	* new.streambnk_tp_att_coef,
---	tpload_subsurface_att ,
+	-- New 5_22_18
+	tpload_subsurface_att   = old.tpload_subsurface * new.grnd_tp_att_coef,
 	tpload_pointsource_att = old.tpload_pointsource * new.pt_2011_tp_att_coef   ,
 	tpload_septics_att     = old.tpload_septics	* new.lowdensity2011cat_tp_att_coef,
 
@@ -321,7 +322,9 @@ Set
 	tnload_FarmAn_att 	= old.tnload_FarmAn 	* new.all_farm2011cat_tn_att_coef,
 --	tnload_tiledrain_att ,
 	tnload_streambank_att 	= old.tnload_streambank	* new.streambnk_tp_att_coef,
---	tnload_subsurface_att ,
+
+	-- New 5_22_18
+	tnload_subsurface_att   = old.tnload_subsurface * new.grnd_tn_att_coef,
 	tnload_pointsource_att = old.tnload_pointsource * new.pt_2011_tn_att_coef ,
 	tnload_septics_att     = old.tnload_septics	* new.lowdensity2011cat_tn_att_coef,
 

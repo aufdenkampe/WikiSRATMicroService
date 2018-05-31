@@ -133,6 +133,10 @@ all_forest2011cat_tp_att_coef float,
 all_farm2011cat_tp_att_coef float,
 streambnk_tp_att_coef float,
 
+-- add in ground water 5_22_18
+grnd_tp_att_coef float,
+
+
 ow2011_tn_att_coef float,
 ice2011_tn_att_coef float,
 urbop2011_tn_att_coef float,
@@ -157,6 +161,8 @@ all_forest2011cat_tn_att_coef float,
 all_farm2011cat_tn_att_coef float,
 streambnk_tn_att_coef float,
 
+-- add in ground water 5_22_18
+grnd_tn_att_coef float,
 
 ow2011_tss_att_coef float,
 ice2011_tss_att_coef float,
@@ -213,6 +219,9 @@ all_forest2011cat_tp_att_coef,
 all_farm2011cat_tp_att_coef,
 streambnk_tp_att_coef,
 
+-- Added in 5_22_18
+grnd_tp_att_coef,
+
 ow2011_tn_att_coef,
 ice2011_tn_att_coef,
 urbop2011_tn_att_coef,
@@ -236,6 +245,10 @@ lowdensity2011cat_tn_att_coef,
 all_forest2011cat_tn_att_coef,
 all_farm2011cat_tn_att_coef,
 streambnk_tn_att_coef,
+
+
+-- Added in 5_22_18
+grnd_tn_att_coef,
 
 ow2011_tss_att_coef,
 ice2011_tss_att_coef,
@@ -292,7 +305,8 @@ sum(coalesce(p_all_farm2011cat_x_huc12,0) 	* rdc_22),
 ( sum(coalesce(p_catarea_x_huc12,0) 	* rdc_22) * 0.40 )
 ),
 
-
+-- Add in subsurface
+sum(coalesce(p_tnsumgrnd_x_huc12,0) 	* rdc_22),
 
 sum(coalesce(p_ow2011catcomid_x_huc12,0) 	* rdc_0),
 sum(coalesce(p_ice2011catcomid_x_huc12,0) 	* rdc_0),
@@ -322,6 +336,8 @@ sum(coalesce(p_all_farm2011cat_x_huc12,0) 	* rdc_0),
 ( sum(coalesce(p_catarea_x_huc12,0) 	* rdc_0) * 0.40 )
 ),
 
+-- Add in subsurface
+sum(coalesce(p_tnsumgrnd_x_huc12,0) 	* rdc_0),
 
 
 sum(coalesce(p_ow2011catcomid_x_huc12,0) 	* rdc_42),
@@ -366,12 +382,17 @@ Where hcn.Huc12 is not null
 Group By hcn.huc12;	 
 
 	
-Alter Table wikiwtershed.HUC12_att2 add constraint pkhuc12_att4 Primary Key (huc12);
+Alter Table wikiwtershed.HUC12_att2 add constraint pkhuc12_att10 Primary Key (huc12);
 
 grant select on wikiwtershed.HUC12_att  to ms_select;
 
 Drop Table If Exists wikiwtershed.HUC12_att;
 
 Alter Table wikiwtershed.HUC12_att2 Rename TO HUC12_att;
+
+Alter Table wikiwtershed.HUC12_att Rename TO HUC12_att_new;
+
+
+
 
  
