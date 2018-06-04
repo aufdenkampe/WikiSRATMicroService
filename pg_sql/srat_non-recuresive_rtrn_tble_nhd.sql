@@ -322,12 +322,21 @@ set
 
 
 Update nhdplus_out as old
-Set  totdasqkm 	= new.areasqkm,
+Set   
      areasqkm 	= new.areasqkm
 From wikiwtershed.nhdplus_stream_nsidx new
 where old.comid = new.comid;
 -- Push It Down the tree for every Row..
 --
+
+Update nhdplus_out as old
+Set   
+     totdasqkm 	= new.totdasqkm
+From wikiwtershed.nhdplus_totdasqkm new
+where old.comid = new.comid;
+-- Push It Down the tree for every Row..
+--
+
 
  
 do 
@@ -381,10 +390,14 @@ Where new.comid = old.comid
 		-- This gives us a 5 percent fudge factor on the upstream s
 set enable_seqscan = on;
 
+-- Check values For Area
+
 Return Query 
 Select 
 	comid, 
 	tploadrate_total,  tp_conc, 
+	--totdasqkm, areasqkm,
+	
 	tnloadrate_total,  tn_conc, 
 	tssloadrate_total, tss_conc 
 From nhdplus_out;
