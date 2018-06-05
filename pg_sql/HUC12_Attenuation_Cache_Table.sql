@@ -22,6 +22,9 @@ Add Column  rdc_22 float;
 Alter Table wikiwtershed.HUC12_att_tmptbl1_comidextarray
 Add Column  rdc_42 float;
 
+Alter Table wikiwtershed.HUC12_att_tmptbl1_comidextarray
+Add Column  rdc_75 float;
+
 Drop Table if Exists wikiwtershed.HUC12_att_tmptbl1_comidextarray;
 
 Create Table wikiwtershed.HUC12_att_tmptbl1_comidextarray
@@ -31,6 +34,10 @@ rte float[],
 rdc_84 float,
 rdc_29 float,
 rdc_12 float,
+rdc_0 float,
+rdc_22 float,
+rdc_42 float,
+rdc_75 float,
 );
 
 ALTER TABLE wikiwtershed.HUC12_att_tmptbl1_comidextarray ALTER COLUMN comid SET NOT NULL;
@@ -47,11 +54,11 @@ rdc_29,
 rdc_12,
 rdc_42,
 rdc_22,
-rdc_0
-
+rdc_0,
+rdc_75
 )
 (
-With Recursive included_parts(comid, rte, plce, huc12, hydroseq, calc84,calc29,calc12, calc42, calc22, calc0 ) As 
+With Recursive included_parts(comid, rte, plce, huc12, hydroseq, calc84,calc29,calc12, calc42, calc22, calc0, calc75 ) As 
 (
 Select * From
 (
@@ -62,7 +69,7 @@ Select lnx.comid, (shed.shedareadrainlake/100), 1::integer as plce, huc12, hydro
 	, 1 - ( (shed.shedareadrainlake/100)::float * (0.42)::float ) calc42
 	, 1 - ( (shed.shedareadrainlake/100)::float * (0.22)::float ) calc22
 	, 1 - ( (shed.shedareadrainlake/100)::float * (0.0)::float  ) calc0
-
+	, 1 - ( (shed.shedareadrainlake/100)::float * (0.75)::float ) calc75
 	
 From wikiwtershed.nhdplus_stream_nsidx lnx join wikiwtershed.cache_nhdcoefs shed
 On lnx.comid = shed.comid
@@ -77,7 +84,9 @@ Select included_parts.comid, shd, included_parts.plce + 1 as plce, included_part
 	included_parts.calc12 * ( 1 - ( shd * (0.12)::float )),
 	included_parts.calc42 * ( 1 - ( shd * (0.42)::float )),
 	included_parts.calc22 * ( 1 - ( shd * (0.22)::float )), 
-	included_parts.calc0  * ( 1 - ( shd * (0.0)::float  )) 	 
+	included_parts.calc0  * ( 1 - ( shd * (0.0)::float  )),
+	included_parts.calc75  * ( 1 - ( shd * (0.75)::float))
+	 	 
 From  
 	(
 	Select lnx.comid, (shed.shedareadrainlake/100)::float as shd,  huc12, hydroseq, dnhydroseq
@@ -91,19 +100,23 @@ From
 Select 
 	comid, 
 	--array_agg(rte order by plce asc)::float[],
-	min(calc84), min(calc29), min(calc12),min(calc42), min(calc22), min(calc0)
+	min(calc84), min(calc29), min(calc12),min(calc42), min(calc22), min(calc0), min(calc75)
 From included_parts
 Group By comid  
 ) ;
 -- runs in 1438120
+
+
 
 ALTER TABLE wikiwtershed.huc12_att_tmptbl1_comidextarray
   ADD PRIMARY KEY (comid);
 
 Select * from wikiwtershed.HUC12_att_tmptbl1_comidextarray limit 100
 
-Drop Table if Exists wikiwtershed.HUC12_att2;
 
+
+
+Drop Table if Exists wikiwtershed.HUC12_att2;
 Create Table wikiwtershed.HUC12_att2
 (
 huc12 character varying not null,
@@ -191,6 +204,8 @@ streambnk_tss_att_coef float
 
 set enable_seqscan = off; 
 
+
+Truncate table wikiwtershed.HUC12_att2;
 
 insert into wikiwtershed.HUC12_att2
 (
@@ -340,31 +355,31 @@ sum(coalesce(p_all_farm2011cat_x_huc12,0) 	* rdc_0),
 sum(coalesce(p_tnsumgrnd_x_huc12,0) 	* rdc_0),
 
 
-sum(coalesce(p_ow2011catcomid_x_huc12,0) 	* rdc_42),
-sum(coalesce(p_ice2011catcomid_x_huc12,0) 	* rdc_42),
-sum(coalesce(p_urbop2011catcomid_x_huc12,0) 	* rdc_42),
-sum(coalesce(p_urblo2011catcomid_x_huc12,0) 	* rdc_42),
-sum(coalesce(p_urbmd2011catcomid_x_huc12,0) 	* rdc_42),
-sum(coalesce(p_urbhi2011catcomid_x_huc12,0) 	* rdc_42),
-sum(coalesce(p_bl2011catcomid_x_huc12,0) 	* rdc_42),
-sum(coalesce(p_decid2011catcomid_x_huc12,0) 	* rdc_42),
-sum(coalesce(p_conif2011catcomid_x_huc12,0) 	* rdc_42),
-sum(coalesce(p_mxfst2011catcomid_x_huc12,0) 	* rdc_42),
-sum(coalesce(p_shrb2011catcomid_x_huc12,0) 	* rdc_42),
-sum(coalesce(p_grs2011catcomid_x_huc12,0) 	* rdc_42),
-sum(coalesce(p_hay2011catcomid_x_huc12,0) 	* rdc_42),
-sum(coalesce(p_crop2011catcomid_x_huc12,0) 	* rdc_42),
-sum(coalesce(p_wdwet2011catcomid_x_huc12,0) 	* rdc_42),
-sum(coalesce(p_hbwet2011catcomid_x_huc12,0) 	* rdc_42), 
+sum(coalesce(p_ow2011catcomid_x_huc12,0) 	* rdc_75),
+sum(coalesce(p_ice2011catcomid_x_huc12,0) 	* rdc_75),
+sum(coalesce(p_urbop2011catcomid_x_huc12,0) 	* rdc_75),
+sum(coalesce(p_urblo2011catcomid_x_huc12,0) 	* rdc_75),
+sum(coalesce(p_urbmd2011catcomid_x_huc12,0) 	* rdc_75),
+sum(coalesce(p_urbhi2011catcomid_x_huc12,0) 	* rdc_75),
+sum(coalesce(p_bl2011catcomid_x_huc12,0) 	* rdc_75),
+sum(coalesce(p_decid2011catcomid_x_huc12,0) 	* rdc_75),
+sum(coalesce(p_conif2011catcomid_x_huc12,0) 	* rdc_75),
+sum(coalesce(p_mxfst2011catcomid_x_huc12,0) 	* rdc_75),
+sum(coalesce(p_shrb2011catcomid_x_huc12,0) 	* rdc_75),
+sum(coalesce(p_grs2011catcomid_x_huc12,0) 	* rdc_75),
+sum(coalesce(p_hay2011catcomid_x_huc12,0) 	* rdc_75),
+sum(coalesce(p_crop2011catcomid_x_huc12,0) 	* rdc_75),
+sum(coalesce(p_wdwet2011catcomid_x_huc12,0) 	* rdc_75),
+sum(coalesce(p_hbwet2011catcomid_x_huc12,0) 	* rdc_75), 
 
-sum(coalesce(p_all_wetland2011cat_x_huc12,0) 	* rdc_42),
-sum(coalesce(p_all_lowdensity2011cat_x_huc12,0) * rdc_42),
-sum(coalesce(p_all_forest2011cat_x_huc12,0) 	* rdc_42),
-sum(coalesce(p_all_farm2011cat_x_huc12,0) 	* rdc_42),
+sum(coalesce(p_all_wetland2011cat_x_huc12,0) 	* rdc_75),
+sum(coalesce(p_all_lowdensity2011cat_x_huc12,0) * rdc_75),
+sum(coalesce(p_all_forest2011cat_x_huc12,0) 	* rdc_75),
+sum(coalesce(p_all_farm2011cat_x_huc12,0) 	* rdc_75),
 --streambank is special
 (
-( sum(coalesce(p_imparea_x_huc12,0) 	* rdc_42) * 0.60 ) +
-( sum(coalesce(p_catarea_x_huc12,0) 	* rdc_42) * 0.40 )
+( sum(coalesce(p_imparea_x_huc12,0) 	* rdc_75) * 0.60 ) +
+( sum(coalesce(p_catarea_x_huc12,0) 	* rdc_75) * 0.40 )
 )
 
 
@@ -384,13 +399,14 @@ Group By hcn.huc12;
 	
 Alter Table wikiwtershed.HUC12_att2 add constraint pkhuc12_att10 Primary Key (huc12);
 
-grant select on wikiwtershed.HUC12_att  to ms_select;
+grant select on wikiwtershed.HUC12_att2  to ms_select;
+
+select * from wikiwtershed.HUC12_att2  limit 1
 
 Drop Table If Exists wikiwtershed.HUC12_att;
 
 Alter Table wikiwtershed.HUC12_att2 Rename TO HUC12_att;
 
-Alter Table wikiwtershed.HUC12_att Rename TO HUC12_att_new;
 
 
 
