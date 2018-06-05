@@ -109,13 +109,19 @@ dnhydroseq integer not null,
 ShedAreaDrainLake double precision Default 0,
 tploadrate_total  float Default 0,
 tploadrate_total_ups  float Default 0,
-tp_conc                float Default 0,
+
+-- Changed 6-5-18
+tp_conc                float Default null,
 tnloadrate_total  float Default 0,
 tnloadrate_total_ups  float Default 0,
-tn_conc                float Default 0,
+
+-- Changed 6-5-18
+tn_conc                float Default null,
 tssloadrate_total  float Default 0,
 tssloadrate_total_ups  float Default 0,
-tss_conc  float Default 0,
+
+-- Changed 6-5-18
+tss_conc  float Default null,
 totdasqkm float Default 0,
 areasqkm float Default 0,
 CONSTRAINT nhdplus_tmp_primary PRIMARY KEY (comid)
@@ -377,6 +383,7 @@ $$
 Update 
 	nhdplus_out old
 	Set 
+		
 		tp_conc  = ( tploadrate_total_ups  * 1000000 ) / ( new.qe_ma * 31557600 * 28.3168 ),
 		tn_conc  = ( tnloadrate_total_ups  * 1000000 ) / ( new.qe_ma * 31557600 * 28.3168 ),
 		tss_conc = ( tssloadrate_total_ups * 1000000 ) / ( new.qe_ma * 31557600 * 28.3168 )
