@@ -255,7 +255,7 @@ x.comid
 	(              coalesce(huc12_out.tpload_subsurface,0)  *             coalesce(p_tnsumgrnd_x_huc12,0)) +
 	(              coalesce(huc12_out.tpload_pointsource,0) *             coalesce(p_pt_kgn_yr_x_huc12,0)) +
 	(              coalesce(huc12_out.tpload_septics,0)     *             coalesce(p_all_lowdensity2011cat_x_huc12,0)) 
-) *   ( 1 - ( (ShedAreaDrainLake/100) * (select  tn from wikiwtershed.retetion_factors) ))
+) *   ( 1 - ( (ShedAreaDrainLake/100) * (select  tp from wikiwtershed.retetion_factors) ))
 
 ,
 (

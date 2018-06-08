@@ -65,13 +65,17 @@ rdc_75,
 rdc_21
 )
 
+-- I had to make a major fix here 6-8-18
+-- based on the fact that some nhdplus catchments do not have areas and therefore were stopping 
+-- the routing from happengin allowing zeroes to move forward solved the problem for area
+
 
 (
-With Recursive included_parts(step, comid,comid2, rte, plce, huc12, dnhydroseq, calc84,calc29,calc12, calc42, calc22, calc0, calc75, calc21 ) As 
+With Recursive included_parts(step, comid,comid2, rte, plce, huc12, dnhydroseq,areasqkm, calc84,calc29,calc12, calc42, calc22, calc0, calc75, calc21 ) As 
 (
 Select * From
 (
-Select 1 step,lnx.comid,lnx.comid, (shed.shedareadrainlake/100), 1::integer as plce, huc12, dnhydroseq
+Select 1 step,lnx.comid,lnx.comid, (shed.shedareadrainlake/100), 1::integer as plce, huc12, dnhydroseq, areasqkm
 	, 1 - ( (shed.shedareadrainlake/100)::float * (0.84)::float ) calc84
 	, 1 - ( (shed.shedareadrainlake/100)::float * (0.29)::float ) calc29
 	, 1 - ( (shed.shedareadrainlake/100)::float * (0.12)::float ) calc12
@@ -88,19 +92,19 @@ On lnx.comid = shed.comid --and shed.huc12 like '020402050401' and shed.comid = 
 --limit 100000
 )t
 Union All
-Select included_parts.step + 1, included_parts.comid,t1.comid, shd, included_parts.plce + 1 as plce, included_parts.huc12, t1.dnhydroseq,
-	case when (included_parts.calc84 * ( 1 - ( shd * (0.84)::float ))) < .01 then 0 else (included_parts.calc84 * ( 1 - ( shd * (0.84)::float ))) end,
-	case when (included_parts.calc29 * ( 1 - ( shd * (0.29)::float ))) < .01 then 0 else (included_parts.calc29 * ( 1 - ( shd * (0.29)::float ))) end, 
-	case when (included_parts.calc12 * ( 1 - ( shd * (0.12)::float ))) < .01 then 0 else (included_parts.calc12 * ( 1 - ( shd * (0.12)::float ))) end,
-	case when (included_parts.calc42 * ( 1 - ( shd * (0.42)::float ))) < .01 then 0 else (included_parts.calc42 * ( 1 - ( shd * (0.42)::float ))) end,
-	case when (included_parts.calc22 * ( 1 - ( shd * (0.22)::float ))) < .01 then 0 else (included_parts.calc22 * ( 1 - ( shd * (0.22)::float ))) end, 
-	case when (included_parts.calc0  * ( 1 - ( shd * (0.0) ::float ))) < .01 then 0 else (included_parts.calc0  * ( 1 - ( shd * (0.0 )::float ))) end,
-	case when (included_parts.calc75 * ( 1 - ( shd * (0.75)::float ))) < .01 then 0 else (included_parts.calc75 * ( 1 - ( shd * (0.75)::float ))) end,
-	case when (included_parts.calc21 * ( 1 - ( shd * (0.21)::float ))) < .01 then 0 else (included_parts.calc21 * ( 1 - ( shd * (0.21)::float ))) end
+Select included_parts.step + 1, included_parts.comid,t1.comid, shd, included_parts.plce + 1 as plce, included_parts.huc12, t1.dnhydroseq, t1.areasqkm,
+	case when (included_parts.calc84 * ( 1 - ( coalesce(shd,0) * (0.84)::float ))) < .01 then 0 else (included_parts.calc84 * ( 1 - ( coalesce(shd,0) * (0.84)::float ))) end,
+	case when (included_parts.calc29 * ( 1 - ( coalesce(shd,0) * (0.29)::float ))) < .01 then 0 else (included_parts.calc29 * ( 1 - ( coalesce(shd,0) * (0.29)::float ))) end, 
+	case when (included_parts.calc12 * ( 1 - ( coalesce(shd,0) * (0.12)::float ))) < .01 then 0 else (included_parts.calc12 * ( 1 - ( coalesce(shd,0) * (0.12)::float ))) end,
+	case when (included_parts.calc42 * ( 1 - ( coalesce(shd,0) * (0.42)::float ))) < .01 then 0 else (included_parts.calc42 * ( 1 - ( coalesce(shd,0) * (0.42)::float ))) end,
+	case when (included_parts.calc22 * ( 1 - ( coalesce(shd,0) * (0.22)::float ))) < .01 then 0 else (included_parts.calc22 * ( 1 - ( coalesce(shd,0) * (0.22)::float ))) end, 
+	case when (included_parts.calc0  * ( 1 - ( coalesce(shd,0) * (0.0) ::float ))) < .01 then 0 else (included_parts.calc0  * ( 1 - ( coalesce(shd,0) * (0.0 )::float ))) end,
+	case when (included_parts.calc75 * ( 1 - ( coalesce(shd,0) * (0.75)::float ))) < .01 then 0 else (included_parts.calc75 * ( 1 - ( coalesce(shd,0) * (0.75)::float ))) end,
+	case when (included_parts.calc21 * ( 1 - ( coalesce(shd,0) * (0.21)::float ))) < .01 then 0 else (included_parts.calc21 * ( 1 - ( coalesce(shd,0) * (0.21)::float ))) end
 	 	 
 From  
 	(
-	Select lnx.comid, (shed.shedareadrainlake/100)::float as shd,  huc12, hydroseq, dnhydroseq
+	Select lnx.comid, (shed.shedareadrainlake/100)::float as shd,  huc12, hydroseq, dnhydroseq, areasqkm
 	
 	From wikiwtershed.nhdplus_stream_nsidx lnx left outer join wikiwtershed.cache_nhdcoefs shed
 	On lnx.comid = shed.comid
@@ -108,7 +112,7 @@ From
 	join included_parts 
 	-- on t1.dnhydroseq = included_parts.hydroseq 
 	 on t1.hydroseq = included_parts.dnhydroseq 
-	and t1.huc12 = included_parts.huc12 
+	and ( t1.huc12 = included_parts.huc12 or t1.areasqkm < .01)
 )
 Select 
 	comid, 
