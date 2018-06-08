@@ -105,7 +105,7 @@ CREATE TEMP TABLE nhdplus_out
 (
 comid integer not null,
 hydroseq integer not null,
-dnhydroseq integer not null,
+d_comid integer not null,
 ShedAreaDrainLake double precision Default 0,
 tploadrate_total  float Default 0,
 tploadrate_total_ups  float Default 0,
@@ -223,7 +223,7 @@ Insert into nhdplus_out
 (
 comid
 ,hydroseq
-,dnhydroseq
+,d_comid
 ,ShedAreaDrainLake
 ,tploadrate_total
 ,tnloadrate_total
@@ -231,8 +231,8 @@ comid
 )
 Select 
 x.comid
-,rte.hydroseq
-,rte.dnhydroseq 
+,rte2.hydroseq
+,rte1.d_comid
 ,cfs.ShedAreaDrainLake
 ,
 (
@@ -305,16 +305,23 @@ x.comid
 
 From 
                 wikiwtershed.nhdplus_x_huc12 x 
+                
                 join 
                 huc12_out 
                 on x.huc12 = huc12_out.huc12
+                
                 join
                 wikiwtershed.cache_nhdcoefs cfs
                 on x.comid = cfs.comid
+
                 join
-                wikiwtershed.nhdplus_stream_nsidx rte
-                ON x.comid=rte.comid
-                ;
+                wikiwtershed.comid_routing rte1
+                ON x.comid=rte1.comid
+                
+                join
+                wikiwtershed.nhdplus_stream_nsidx rte2
+                ON x.comid=rte2.comid;
+
 
 
 -- Set the upstream equal to the total before you start
@@ -366,7 +373,7 @@ begin
 		From nhdplus_out 
 		where comid = _r.comid
 	 ) new
-    Where old.hydroseq = _r.dnhydroseq; 
+    Where old.comid = _r.d_comid; 
 
     
   end loop; 
