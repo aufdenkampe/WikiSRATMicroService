@@ -407,6 +407,10 @@ Drop Table If Exists wikiwtershed.HUC12_att;
 
 Alter Table wikiwtershed.HUC12_att2 Rename TO HUC12_att;
 
+Alter Table wikiwtershed.HUC12_att Rename TO HUC12_att_new;
+
+
+Alter Table wikiwtershed.HUC12_att_new Rename TO HUC12_att;
 
 
 
