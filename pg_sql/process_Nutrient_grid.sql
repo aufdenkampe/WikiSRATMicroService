@@ -12,7 +12,7 @@
 
 Drop Table If Exists wikiwtershed.grndwter_tn_nhdplus ;
 
-CREATE TABLE wikiwtershed.grndwter_tn_nhdplus 
+CREATE TABLE wikiwtershed.grndwter_tn_nhdplus2 
 (
 rowid text,
 comid text,
@@ -23,7 +23,7 @@ SUM text
 );
 
 
-COPY wikiwtershed.grndwter_tn_nhdplus 
+COPY wikiwtershed.grndwter_tn_nhdplus2 
 FROM '/home/drwi-user/nhd_natltn_1_26_18.csv' 
 WITH CSV HEADER DELIMITER AS ',';
 
@@ -32,21 +32,71 @@ Alter Table wikiwtershed.grndwter_tn_nhdplus  Drop Column ZONE_CODE;
 Alter Table wikiwtershed.grndwter_tn_nhdplus  Drop Column COUNT;
 Alter Table wikiwtershed.grndwter_tn_nhdplus  Drop Column AREA;
 
-Select * From wikiwtershed.grndwter_tn_nhdplus limit 10
+Select * From wikiwtershed.grndwter_tn_nhdplus2 where comid in (4518358,4518380)
+Select * From wikiwtershed.grndwter_tn_nhdplus where comid in (4518358,4518380)
 
-ALTER TABLE wikiwtershed.grndwter_tn_nhdplus
+"comid";"sum"
+4518380;51.3250846862793
+4518358;1255.62159724534
+
+
+
+ALTER TABLE wikiwtershed.grndwter_tn_nhdplus2
   ADD PRIMARY KEY (comid);
 
 
 Alter  Table wikiwtershed.grndwter_tn_nhdplus Alter Column SUM Type float using (replace(SUM, ',' ,'' ))::float;
 
-Alter  Table wikiwtershed.grndwter_tn_nhdplus Alter Column comid Type integer using comid::integer;
+Alter  Table wikiwtershed.grndwter_tn_nhdplus2 Alter Column comid Type integer using comid::integer;
 
  
 
 ALTER TABLE wikiwtershed.grndwter_tn_nhdplus
   ADD FOREIGN KEY (comid) REFERENCES wikiwtershed.nhdplus_x_huc12 (comid)
    ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+-- UPdate Cache table for NHD
+
+
+
+COALESCE(nut.tnsumgrnd, 0::double precision) AS tnsumgrnd,
+
+
+SELECT grndwter_tn_nhdplus.comid, grndwter_tn_nhdplus.sum AS tnsumgrnd
+              FROM wikiwtershed.
+
+
+
+        CASE
+            WHEN sum(tmp.tnsumgrnd) OVER (PARTITION BY tmp.huc12) > 0::double precision THEN tmp.tnsumgrnd / sum(tmp.tnsumgrnd) OVER (PARTITION BY tmp.huc12)
+            ELSE NULL::double precision
+        END, 0::double precision) AS p_tnsumgrnd_x_huc12
+
+
+nhdplus_x_huc12.comid
+
+
+
+Update wikiwtershed.cache_nhdcoefs
+set p_tnsumgrnd_x_huc12 = 0;
+
+Update wikiwtershed.cache_nhdcoefs old
+set p_tnsumgrnd_x_huc12 = new.p_tnsumgrnd_x_huc12
+From
+(
+select huc.comid,
+        CASE
+            WHEN sum(grn.sum) OVER (PARTITION BY huc.huc12) > 0::double precision THEN grn.sum / sum(grn.sum) OVER (PARTITION BY huc.huc12)
+            ELSE NULL::double precision
+        END AS p_tnsumgrnd_x_huc12
+From wikiwtershed.nhdplus_x_huc12 huc join wikiwtershed.grndwter_tn_nhdplus grn
+on huc.comid = grn.comid
+) new
+where old.comid = new.comid;
+
+
 
 
 
