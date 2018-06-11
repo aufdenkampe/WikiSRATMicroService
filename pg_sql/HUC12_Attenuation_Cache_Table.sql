@@ -420,7 +420,7 @@ Where hcn.Huc12 is not null
 Group By hcn.huc12;	 
 
 	
-Alter Table wikiwtershed.HUC12_att2 add constraint pkhuc12_att10 Primary Key (huc12);
+Alter Table wikiwtershed.HUC12_att2 add constraint pkhuc12_att110 Primary Key (huc12);
 
 grant select on wikiwtershed.HUC12_att2  to ms_select;
 
@@ -432,7 +432,8 @@ Alter Table wikiwtershed.HUC12_att2 Rename TO HUC12_att;
 
 Alter Table wikiwtershed.HUC12_att Rename TO HUC12_att_new;
 
-
+Alter Table  wikiwtershed.cache_nhdcoefs rename to cache_nhdcoefs_new;
+Alter Table  wikiwtershed.cache_nhdcoefs_new rename to cache_nhdcoefs;
 Alter Table wikiwtershed.HUC12_att_new Rename TO HUC12_att;
 
 
