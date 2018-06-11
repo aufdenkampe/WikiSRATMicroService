@@ -432,9 +432,10 @@ Alter Table wikiwtershed.HUC12_att2 Rename TO HUC12_att;
 
 Alter Table wikiwtershed.HUC12_att Rename TO HUC12_att_new;
 
-Alter Table  wikiwtershed.cache_nhdcoefs rename to cache_nhdcoefs_new;
-Alter Table  wikiwtershed.cache_nhdcoefs_new rename to cache_nhdcoefs;
+
 Alter Table wikiwtershed.HUC12_att_new Rename TO HUC12_att;
+
+
 
 
 

@@ -117,7 +117,8 @@ where old.comid = new.comid;
 
 
 
-
+Select comid, p_tnsumgrnd_x_huc12 From wikiwtershed.cache_nhdcoefs
+where huc12 like '020503010903' 
 
 
 
