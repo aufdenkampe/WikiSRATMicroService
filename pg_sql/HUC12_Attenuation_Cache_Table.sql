@@ -29,7 +29,7 @@ Alter Table wikiwtershed.HUC12_att_tmptbl1_comidextarray
 Add Column  rdc_21 float;
 
 Drop Table if Exists wikiwtershed.HUC12_att_tmptbl1_comidextarray;
-
+ 
 Create Table wikiwtershed.HUC12_att_tmptbl1_comidextarray
 (
 comid integer not null,
@@ -41,7 +41,7 @@ rdc_0 float,
 rdc_22 float,
 rdc_42 float,
 rdc_75 float,
-rdc_21 float,
+rdc_21 float
 );
 
 ALTER TABLE wikiwtershed.HUC12_att_tmptbl1_comidextarray ALTER COLUMN comid SET NOT NULL;
@@ -420,7 +420,7 @@ Where hcn.Huc12 is not null
 Group By hcn.huc12;	 
 
 	
-Alter Table wikiwtershed.HUC12_att2 add constraint pkhuc12_att110 Primary Key (huc12);
+Alter Table wikiwtershed.HUC12_att2 add constraint pkhuc12_att1110 Primary Key (huc12);
 
 grant select on wikiwtershed.HUC12_att2  to ms_select;
 

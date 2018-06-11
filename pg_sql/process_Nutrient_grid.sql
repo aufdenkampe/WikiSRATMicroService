@@ -13,7 +13,7 @@
 
 --arcpy.gp.ZonalStatisticsAsTable_sa("Catchment","comid","natl_gwn","C:/Users/smh362/Documents/ArcGIS/Default.gdb/ZonalSt_Catchme4","DATA","ALL")
 
-Drop Table If Exists wikiwtershed.grndwter_tn_nhdplus ;
+Drop Table If Exists wikiwtershed.grndwter_tn_nhdplus2 ;
 
 CREATE TABLE wikiwtershed.grndwter_tn_nhdplus2 
 (
@@ -32,7 +32,7 @@ SUM text
 
 
 COPY wikiwtershed.grndwter_tn_nhdplus2 
-FROM '/tmp/tn_10m.csv' 
+FROM '/home/drwi-user/tn_10m.csv' 
 WITH CSV HEADER DELIMITER AS ',';
 
 Alter Table wikiwtershed.grndwter_tn_nhdplus  Drop Column rowid;
@@ -58,7 +58,7 @@ select sum from  wikiwtershed.grndwter_tn_nhdplus2 limit 10
 Alter  Table wikiwtershed.grndwter_tn_nhdplus2 Alter Column SUM Type float using (replace(SUM, ',' ,'' ))::float;
 Alter  Table wikiwtershed.grndwter_tn_nhdplus2 Alter Column comid Type integer using comid::integer;
 
- 
+Select sum from wikiwtershed.grndwter_tn_nhdplus2 limit 10 
 
 ALTER TABLE wikiwtershed.grndwter_tn_nhdplus2
   ADD FOREIGN KEY (comid) REFERENCES wikiwtershed.nhdplus_x_huc12 (comid)
@@ -88,12 +88,12 @@ nhdplus_x_huc12.comid
 
 Select * 
 
-From wikiwtershed.grndwter_tn_nhdplus
+From wikiwtershed.grndwter_tn_nhdplus2
 where COMID = 4518358 or COMID = 4518380
 
 
 
-Drop table wikiwtershed.grndwter_tn_nhdplus
+Drop table wikiwtershed.grndwter_tn_nhdplus;
 
 Alter table wikiwtershed.grndwter_tn_nhdplus2 rename to grndwter_tn_nhdplus;
 
@@ -110,7 +110,8 @@ select huc.comid,
             ELSE NULL::double precision
         END AS p_tnsumgrnd_x_huc12
 From wikiwtershed.nhdplus_x_huc12 huc join wikiwtershed.grndwter_tn_nhdplus grn
-on huc.comid = grn.comid
+on huc.comid = grn.comid 
+--where huc12 like '020503010903'
 ) new
 where old.comid = new.comid;
 
