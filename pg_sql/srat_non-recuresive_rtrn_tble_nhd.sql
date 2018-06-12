@@ -105,7 +105,7 @@ CREATE TEMP TABLE nhdplus_out
 (
 comid integer not null,
 hydroseq integer not null,
-d_comid integer not null,
+d_comid integer,
 ShedAreaDrainLake double precision Default 0,
 tploadrate_total  float Default 0,
 tploadrate_total_ups  float Default 0,
