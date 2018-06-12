@@ -80,5 +80,8 @@ Grant Select on wikiwtershed.comid_routing to ms_select
 ALTER TABLE wikiwtershed.comid_routing
   ADD PRIMARY KEY (comid);
 
+-- Found an error in the NHD Plus Routing need to manually set this
+
+update wikiwtershed.comid_routing set d_comid = 4652070 where comid = 4650940
 	
 	
