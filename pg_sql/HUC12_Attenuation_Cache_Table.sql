@@ -28,6 +28,16 @@ Add Column  rdc_75 float;
 Alter Table wikiwtershed.HUC12_att_tmptbl1_comidextarray
 Add Column  rdc_21 float;
 
+Alter Table wikiwtershed.HUC12_att_tmptbl1_comidextarray
+Add Column  rdc_12 float;
+
+Alter Table wikiwtershed.HUC12_att_tmptbl1_comidextarray
+Add Column  rdc_11 float;
+
+Alter Table wikiwtershed.HUC12_att_tmptbl1_comidextarray
+Add Column  rdc_10 float;
+
+
 Drop Table if Exists wikiwtershed.HUC12_att_tmptbl1_comidextarray;
  
 Create Table wikiwtershed.HUC12_att_tmptbl1_comidextarray
@@ -41,7 +51,9 @@ rdc_0 float,
 rdc_22 float,
 rdc_42 float,
 rdc_75 float,
-rdc_21 float
+rdc_21 float,
+rdc_11 float
+rdc_10 float
 );
 
 ALTER TABLE wikiwtershed.HUC12_att_tmptbl1_comidextarray ALTER COLUMN comid SET NOT NULL;
@@ -62,7 +74,9 @@ rdc_42,
 rdc_22,
 rdc_0,
 rdc_75,
-rdc_21
+rdc_21,
+rdc_11,
+rdc_10
 )
 
 -- I had to make a major fix here 6-8-18
@@ -71,7 +85,7 @@ rdc_21
 
 
 (
-With Recursive included_parts(step, comid,comid2, rte, plce, huc12, dnhydroseq,areasqkm, calc84,calc29,calc12, calc42, calc22, calc0, calc75, calc21 ) As 
+With Recursive included_parts(step, comid,comid2, rte, plce, huc12, dnhydroseq,areasqkm, calc84,calc29,calc12, calc42, calc22, calc0, calc75, calc21,calc11,calc10 ) As 
 (
 Select * From
 (
@@ -84,7 +98,8 @@ Select 1 step,lnx.comid,lnx.comid, (shed.shedareadrainlake/100), 1::integer as p
 	, 1 - ( (shed.shedareadrainlake/100)::float * (0.0)::float  ) calc0
 	, 1 - ( (shed.shedareadrainlake/100)::float * (0.75)::float ) calc75
 	, 1 - ( (shed.shedareadrainlake/100)::float * (0.21)::float ) calc21
-	
+	, 1 - ( (shed.shedareadrainlake/100)::float * (0.11)::float ) calc11
+	, 1 - ( (shed.shedareadrainlake/100)::float * (0.10)::float ) calc10
 From wikiwtershed.nhdplus_stream_nsidx lnx join wikiwtershed.cache_nhdcoefs shed
 On lnx.comid = shed.comid --and shed.huc12 like '020402050401' and shed.comid = 4652300
  
@@ -100,7 +115,10 @@ Select included_parts.step + 1, included_parts.comid,t1.comid, shd, included_par
 	case when (included_parts.calc22 * ( 1 - ( coalesce(shd,0) * (0.22)::float ))) < .01 then 0 else (included_parts.calc22 * ( 1 - ( coalesce(shd,0) * (0.22)::float ))) end, 
 	case when (included_parts.calc0  * ( 1 - ( coalesce(shd,0) * (0.0) ::float ))) < .01 then 0 else (included_parts.calc0  * ( 1 - ( coalesce(shd,0) * (0.0 )::float ))) end,
 	case when (included_parts.calc75 * ( 1 - ( coalesce(shd,0) * (0.75)::float ))) < .01 then 0 else (included_parts.calc75 * ( 1 - ( coalesce(shd,0) * (0.75)::float ))) end,
-	case when (included_parts.calc21 * ( 1 - ( coalesce(shd,0) * (0.21)::float ))) < .01 then 0 else (included_parts.calc21 * ( 1 - ( coalesce(shd,0) * (0.21)::float ))) end
+	case when (included_parts.calc21 * ( 1 - ( coalesce(shd,0) * (0.21)::float ))) < .01 then 0 else (included_parts.calc21 * ( 1 - ( coalesce(shd,0) * (0.21)::float ))) end,
+	case when (included_parts.calc11 * ( 1 - ( coalesce(shd,0) * (0.11)::float ))) < .01 then 0 else (included_parts.calc11 * ( 1 - ( coalesce(shd,0) * (0.11)::float ))) end,
+	case when (included_parts.calc10 * ( 1 - ( coalesce(shd,0) * (0.10)::float ))) < .01 then 0 else (included_parts.calc10 * ( 1 - ( coalesce(shd,0) * (0.10)::float ))) end
+
 	 	 
 From  
 	(
@@ -117,7 +135,7 @@ From
 Select 
 	comid, 
 	--array_agg(rte order by plce asc)::float[],
-	min(calc84), min(calc29), min(calc12),min(calc42), min(calc22), min(calc0), min(calc75), min(calc21)
+	min(calc84), min(calc29), min(calc12),min(calc42), min(calc22), min(calc0), min(calc75), min(calc21), min(calc11), min(calc10)
 	--*	
 From included_parts
 Group By comid  
@@ -256,7 +274,6 @@ lowdensity2011cat_tp_att_coef,
 all_forest2011cat_tp_att_coef,
 all_farm2011cat_tp_att_coef,
 streambnk_tp_att_coef,
-
 -- Added in 5_22_18
 grnd_tp_att_coef,
 
@@ -277,14 +294,11 @@ crop2011_tn_att_coef,
 wdwet2011_tn_att_coef,
 hbwet2011_tn_att_coef,
 pt_2011_tn_att_coef,
-
 all_wetland2011cat_tn_att_coef,
 lowdensity2011cat_tn_att_coef,
 all_forest2011cat_tn_att_coef,
 all_farm2011cat_tn_att_coef,
 streambnk_tn_att_coef,
-
-
 -- Added in 5_22_18
 grnd_tn_att_coef,
 
@@ -304,7 +318,6 @@ hay2011_tss_att_coef,
 crop2011_tss_att_coef,
 wdwet2011_tss_att_coef,
 hbwet2011_tss_att_coef,
-
 all_wetland2011cat_tss_att_coef,
 lowdensity2011cat_tss_att_coef,
 all_forest2011cat_tss_att_coef,
@@ -315,36 +328,39 @@ streambnk_tss_att_coef
 Select 
 hcn.huc12,
 
-sum(coalesce(p_ow2011catcomid_x_huc12,0) 	* rdc_22),
-sum(coalesce(p_ice2011catcomid_x_huc12,0) 	* rdc_22),
-sum(coalesce(p_urbop2011catcomid_x_huc12,0) 	* rdc_22),
-sum(coalesce(p_urblo2011catcomid_x_huc12,0) 	* rdc_22),
-sum(coalesce(p_urbmd2011catcomid_x_huc12,0) 	* rdc_22),
-sum(coalesce(p_urbhi2011catcomid_x_huc12,0) 	* rdc_22),
-sum(coalesce(p_bl2011catcomid_x_huc12,0) 	* rdc_22),
-sum(coalesce(p_decid2011catcomid_x_huc12,0) 	* rdc_22),
-sum(coalesce(p_conif2011catcomid_x_huc12,0) 	* rdc_22),
-sum(coalesce(p_mxfst2011catcomid_x_huc12,0) 	* rdc_22),
-sum(coalesce(p_shrb2011catcomid_x_huc12,0) 	* rdc_22),
-sum(coalesce(p_grs2011catcomid_x_huc12,0) 	* rdc_22),
-sum(coalesce(p_hay2011catcomid_x_huc12,0) 	* rdc_22),
-sum(coalesce(p_crop2011catcomid_x_huc12,0) 	* rdc_22),
-sum(coalesce(p_wdwet2011catcomid_x_huc12,0) 	* rdc_22),
-sum(coalesce(p_hbwet2011catcomid_x_huc12,0) 	* rdc_22),
-sum(coalesce(p_pt_kgp_yr_x_huc12,0) 		* rdc_22),
+sum(coalesce(p_ow2011catcomid_x_huc12,0) 	* rdc_11),
+sum(coalesce(p_ice2011catcomid_x_huc12,0) 	* rdc_11),
+sum(coalesce(p_urbop2011catcomid_x_huc12,0) 	* rdc_11),
+sum(coalesce(p_urblo2011catcomid_x_huc12,0) 	* rdc_11),
+sum(coalesce(p_urbmd2011catcomid_x_huc12,0) 	* rdc_11),
+sum(coalesce(p_urbhi2011catcomid_x_huc12,0) 	* rdc_11),
+sum(coalesce(p_bl2011catcomid_x_huc12,0) 	* rdc_11),
+sum(coalesce(p_decid2011catcomid_x_huc12,0) 	* rdc_11),
+sum(coalesce(p_conif2011catcomid_x_huc12,0) 	* rdc_11),
+sum(coalesce(p_mxfst2011catcomid_x_huc12,0) 	* rdc_11),
+sum(coalesce(p_shrb2011catcomid_x_huc12,0) 	* rdc_11),
+sum(coalesce(p_grs2011catcomid_x_huc12,0) 	* rdc_11),
+sum(coalesce(p_hay2011catcomid_x_huc12,0) 	* rdc_11),
+sum(coalesce(p_crop2011catcomid_x_huc12,0) 	* rdc_11),
+sum(coalesce(p_wdwet2011catcomid_x_huc12,0) 	* rdc_11),
+sum(coalesce(p_hbwet2011catcomid_x_huc12,0) 	* rdc_11),
+sum(coalesce(p_pt_kgp_yr_x_huc12,0) 		* rdc_11),
 
-sum(coalesce(p_all_wetland2011cat_x_huc12,0) 	* rdc_22),
-sum(coalesce(p_all_lowdensity2011cat_x_huc12,0) * rdc_22),
-sum(coalesce(p_all_forest2011cat_x_huc12,0) 	* rdc_22),
-sum(coalesce(p_all_farm2011cat_x_huc12,0) 	* rdc_22),
+sum(coalesce(p_all_wetland2011cat_x_huc12,0) 	* rdc_11),
+sum(coalesce(p_all_lowdensity2011cat_x_huc12,0) * rdc_11),
+sum(coalesce(p_all_forest2011cat_x_huc12,0) 	* rdc_11),
+sum(coalesce(p_all_farm2011cat_x_huc12,0) 	* rdc_11),
 --streambank is special
 (
-( sum(coalesce(p_imparea_x_huc12,0) 	* rdc_22) * 0.60 ) +
-( sum(coalesce(p_catarea_x_huc12,0) 	* rdc_22) * 0.40 )
+( sum(coalesce(p_imparea_x_huc12,0) 	* rdc_11) * 0.60 ) +
+( sum(coalesce(p_catarea_x_huc12,0) 	* rdc_11) * 0.40 )
 ),
 
 -- Add in subsurface
-sum(coalesce(p_tnsumgrnd_x_huc12,0) 	* rdc_22),
+sum(coalesce(p_tnsumgrnd_x_huc12,0) 	* rdc_11),
+
+
+
 
 sum(coalesce(p_ow2011catcomid_x_huc12,0) 	* rdc_0),
 sum(coalesce(p_ice2011catcomid_x_huc12,0) 	* rdc_0),
@@ -378,31 +394,31 @@ sum(coalesce(p_all_farm2011cat_x_huc12,0) 	* rdc_0),
 sum(coalesce(p_tnsumgrnd_x_huc12,0) 	* rdc_0),
 
 
-sum(coalesce(p_ow2011catcomid_x_huc12,0) 	* rdc_21),
-sum(coalesce(p_ice2011catcomid_x_huc12,0) 	* rdc_21),
-sum(coalesce(p_urbop2011catcomid_x_huc12,0) 	* rdc_21),
-sum(coalesce(p_urblo2011catcomid_x_huc12,0) 	* rdc_21),
-sum(coalesce(p_urbmd2011catcomid_x_huc12,0) 	* rdc_21),
-sum(coalesce(p_urbhi2011catcomid_x_huc12,0) 	* rdc_21),
-sum(coalesce(p_bl2011catcomid_x_huc12,0) 	* rdc_21),
-sum(coalesce(p_decid2011catcomid_x_huc12,0) 	* rdc_21),
-sum(coalesce(p_conif2011catcomid_x_huc12,0) 	* rdc_21),
-sum(coalesce(p_mxfst2011catcomid_x_huc12,0) 	* rdc_21),
-sum(coalesce(p_shrb2011catcomid_x_huc12,0) 	* rdc_21),
-sum(coalesce(p_grs2011catcomid_x_huc12,0) 	* rdc_21),
-sum(coalesce(p_hay2011catcomid_x_huc12,0) 	* rdc_21),
-sum(coalesce(p_crop2011catcomid_x_huc12,0) 	* rdc_21),
-sum(coalesce(p_wdwet2011catcomid_x_huc12,0) 	* rdc_21),
-sum(coalesce(p_hbwet2011catcomid_x_huc12,0) 	* rdc_21), 
+sum(coalesce(p_ow2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_ice2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_urbop2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_urblo2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_urbmd2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_urbhi2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_bl2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_decid2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_conif2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_mxfst2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_shrb2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_grs2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_hay2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_crop2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_wdwet2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_hbwet2011catcomid_x_huc12,0) 	* rdc_10), 
 
-sum(coalesce(p_all_wetland2011cat_x_huc12,0) 	* rdc_21),
-sum(coalesce(p_all_lowdensity2011cat_x_huc12,0) * rdc_21),
-sum(coalesce(p_all_forest2011cat_x_huc12,0) 	* rdc_21),
-sum(coalesce(p_all_farm2011cat_x_huc12,0) 	* rdc_21),
+sum(coalesce(p_all_wetland2011cat_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_all_lowdensity2011cat_x_huc12,0) * rdc_10),
+sum(coalesce(p_all_forest2011cat_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_all_farm2011cat_x_huc12,0) 	* rdc_10),
 --streambank is special
 (
-( sum(coalesce(p_imparea_x_huc12,0) 	* rdc_21) * 0.60 ) +
-( sum(coalesce(p_catarea_x_huc12,0) 	* rdc_21) * 0.40 )
+( sum(coalesce(p_imparea_x_huc12,0) 	* rdc_10) * 0.60 ) +
+( sum(coalesce(p_catarea_x_huc12,0) 	* rdc_10) * 0.40 )
 )
 
 
