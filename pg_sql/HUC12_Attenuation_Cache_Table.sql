@@ -436,17 +436,19 @@ Where hcn.Huc12 is not null
 Group By hcn.huc12;	 
 
 	
-Alter Table wikiwtershed.HUC12_att2 add constraint pkhuc12_att1110 Primary Key (huc12);
+
 
 grant select on wikiwtershed.HUC12_att2  to ms_select;
 
-select * from wikiwtershed.HUC12_att2  limit 1
+Alter Table wikiwtershed.HUC12_att2 Rename TO HUC12_att_new;
 
-Drop Table If Exists wikiwtershed.HUC12_att;
+Alter Table wikiwtershed.HUC12_att_new add constraint pkhuc12_att1110 Primary Key (huc12);
 
-Alter Table wikiwtershed.HUC12_att2 Rename TO HUC12_att;
+select * from wikiwtershed.HUC12_att_new  limit 100
 
-Alter Table wikiwtershed.HUC12_att Rename TO HUC12_att_new;
+Drop Table If Exists wikiwtershed.HUC12_att_old;
+Alter Table wikiwtershed.HUC12_att Rename TO HUC12_att_old;
+Alter Table wikiwtershed.HUC12_att_new Rename TO HUC12_att;
 
 
 Alter Table wikiwtershed.HUC12_att_new Rename TO HUC12_att;
