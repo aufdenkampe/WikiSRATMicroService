@@ -400,31 +400,31 @@ sum(coalesce(p_all_farm2011cat_x_huc12,0) 	* rdc_0),
 sum(coalesce(p_tnsumgrnd_x_huc12,0) 	* rdc_0),
 
 
-sum(coalesce(p_ow2011catcomid_x_huc12,0) 	* rdc_5),
-sum(coalesce(p_ice2011catcomid_x_huc12,0) 	* rdc_5),
-sum(coalesce(p_urbop2011catcomid_x_huc12,0) 	* rdc_5),
-sum(coalesce(p_urblo2011catcomid_x_huc12,0) 	* rdc_5),
-sum(coalesce(p_urbmd2011catcomid_x_huc12,0) 	* rdc_5),
-sum(coalesce(p_urbhi2011catcomid_x_huc12,0) 	* rdc_5),
-sum(coalesce(p_bl2011catcomid_x_huc12,0) 	* rdc_5),
-sum(coalesce(p_decid2011catcomid_x_huc12,0) 	* rdc_5),
-sum(coalesce(p_conif2011catcomid_x_huc12,0) 	* rdc_5),
-sum(coalesce(p_mxfst2011catcomid_x_huc12,0) 	* rdc_5),
-sum(coalesce(p_shrb2011catcomid_x_huc12,0) 	* rdc_5),
-sum(coalesce(p_grs2011catcomid_x_huc12,0) 	* rdc_5),
-sum(coalesce(p_hay2011catcomid_x_huc12,0) 	* rdc_5),
-sum(coalesce(p_crop2011catcomid_x_huc12,0) 	* rdc_5),
-sum(coalesce(p_wdwet2011catcomid_x_huc12,0) 	* rdc_5),
-sum(coalesce(p_hbwet2011catcomid_x_huc12,0) 	* rdc_5), 
+sum(coalesce(p_ow2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_ice2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_urbop2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_urblo2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_urbmd2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_urbhi2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_bl2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_decid2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_conif2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_mxfst2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_shrb2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_grs2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_hay2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_crop2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_wdwet2011catcomid_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_hbwet2011catcomid_x_huc12,0) 	* rdc_10), 
 
-sum(coalesce(p_all_wetland2011cat_x_huc12,0) 	* rdc_5),
-sum(coalesce(p_all_lowdensity2011cat_x_huc12,0) * rdc_5),
-sum(coalesce(p_all_forest2011cat_x_huc12,0) 	* rdc_5),
-sum(coalesce(p_all_farm2011cat_x_huc12,0) 	* rdc_5),
+sum(coalesce(p_all_wetland2011cat_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_all_lowdensity2011cat_x_huc12,0) * rdc_10),
+sum(coalesce(p_all_forest2011cat_x_huc12,0) 	* rdc_10),
+sum(coalesce(p_all_farm2011cat_x_huc12,0) 	* rdc_10),
 --streambank is special
 (
-( sum(coalesce(p_imparea_x_huc12,0) 	* rdc_5) * 0.60 ) +
-( sum(coalesce(p_catarea_x_huc12,0) 	* rdc_5) * 0.40 )
+( sum(coalesce(p_imparea_x_huc12,0) 	* rdc_10) * 0.60 ) +
+( sum(coalesce(p_catarea_x_huc12,0) 	* rdc_10) * 0.40 )
 )
 
 
@@ -450,7 +450,7 @@ Alter Table wikiwtershed.HUC12_att_new add constraint pkhuc12_att1110 Primary Ke
 select * from wikiwtershed.HUC12_att_new  limit 100
 
 
-
+grant select on wikiwtershed.HUC12_att_new  to ms_select;
 Drop Table If Exists wikiwtershed.HUC12_att_old;
 Alter Table wikiwtershed.HUC12_att Rename TO HUC12_att_old;
 Alter Table wikiwtershed.HUC12_att_new Rename TO HUC12_att;
