@@ -248,9 +248,11 @@ x.comid
 	(              coalesce(huc12_out.tpload_FarmAn,0)      *             coalesce(p_all_farm2011cat_x_huc12,0)) +
 	--(              coalesce(huc12_out.tpload_tiledrain,0)   *             coalesce(p_catarea_x_huc12,0)) +
 
--- Stream Bank Is Special	
-	(              coalesce(huc12_out.tpload_streambank,0)  *             coalesce(p_catarea_x_huc12,0) * 0.4 ) +
-	(              coalesce(huc12_out.tpload_streambank,0)  *             coalesce(p_imparea_x_huc12,0) * 0.6 ) +
+-- Stream Bank Is Special
+-- Added this 10.2.18 based on conversation with BME
+-- Smaller models have lower values for streambank	
+	(              coalesce((huc12_out.tpload_streambank*1.25),0)  *             coalesce(p_catarea_x_huc12,0) * 0.4 ) +
+	(              coalesce((huc12_out.tpload_streambank*1.25),0)  *             coalesce(p_imparea_x_huc12,0) * 0.6 ) +
 	-- add in 5_22_18
 	(              coalesce(huc12_out.tpload_subsurface,0)  *             coalesce(p_tnsumgrnd_x_huc12,0)) +
 	(              coalesce(huc12_out.tpload_pointsource,0) *             coalesce(p_pt_kgn_yr_x_huc12,0)) +
@@ -271,9 +273,11 @@ x.comid
 	(              coalesce(huc12_out.tnload_FarmAn,0)      *             coalesce(p_all_farm2011cat_x_huc12,0)) +
 	--(              coalesce(huc12_out.tnload_tiledrain,0)   *             coalesce(p_catarea_x_huc12,0)) +
 
--- Stream Bank Is Special	
-	(              coalesce(huc12_out.tnload_streambank,0)  *             coalesce(p_catarea_x_huc12,0) * 0.4 ) +
-	(              coalesce(huc12_out.tnload_streambank,0)  *             coalesce(p_imparea_x_huc12,0) * 0.6 ) +
+-- Stream Bank Is Special
+-- Added this 10.2.18 based on conversation with BME
+-- Smaller models have lower values for streambank		
+	(              coalesce((huc12_out.tnload_streambank*1.25),0)  *             coalesce(p_catarea_x_huc12,0) * 0.4 ) +
+	(              coalesce((huc12_out.tnload_streambank*1.25),0)  *             coalesce(p_imparea_x_huc12,0) * 0.6 ) +
 	-- add in 5_22_18
 	(              coalesce(huc12_out.tnload_subsurface,0)  *             coalesce(p_tnsumgrnd_x_huc12,0)) +
 	(              coalesce(huc12_out.tnload_pointsource,0) *             coalesce(p_pt_kgn_yr_x_huc12,0)) +
@@ -295,9 +299,11 @@ x.comid
 --	(              coalesce(huc12_out.tssload_FarmAn,0)      *             coalesce(p_all_farm2011cat_x_huc12,0)) +
 	--(              coalesce(huc12_out.tssload_tiledrain,0)   *             coalesce(p_catarea_x_huc12,0)) +
 
--- Stream Bank Is Special	
-	(              coalesce(huc12_out.tssload_streambank,0)  *             coalesce(p_catarea_x_huc12,0) * 0.4 ) +
-	(              coalesce(huc12_out.tssload_streambank,0)  *             coalesce(p_imparea_x_huc12,0) * 0.6 ) 
+-- Stream Bank Is Special
+-- Added this 10.2.18 based on conversation with BME
+-- Smaller models have lower values for streambank		
+	(              coalesce((huc12_out.tssload_streambank*1.25),0)  *             coalesce(p_catarea_x_huc12,0) * 0.4 ) +
+	(              coalesce((huc12_out.tssload_streambank*1.25),0)  *             coalesce(p_imparea_x_huc12,0) * 0.6 ) 
 	--(              coalesce(huc12_out.tssload_subsurface,0)  *             coalesce(p_catarea_x_huc12,0)) +
 	--(              coalesce(huc12_out.tssload_pointsource,0) *             coalesce(p_catarea_x_huc12,0)) +
 	--(              coalesce(huc12_out.tssload_septics,0)     *             coalesce(p_catarea_x_huc12,0)) 

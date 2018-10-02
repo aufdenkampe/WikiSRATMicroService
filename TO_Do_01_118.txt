@@ -1,0 +1,2 @@
+1) add a coef to TN, TSS, and TP for steam bank loading of 1.25
+2) Acept input of developed open space (in the unused slot)

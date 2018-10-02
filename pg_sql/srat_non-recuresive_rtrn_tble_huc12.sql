@@ -304,7 +304,9 @@ Set
  	tpload_OtherUp_att 	= old.tpload_OtherUp	* new.all_wetland2011cat_tp_att_coef,
 	tpload_FarmAn_att 	= old.tpload_FarmAn 	* new.all_farm2011cat_tp_att_coef,
 --	tpload_tiledrain_att ,
-	tpload_streambank_att 	= old.tpload_streambank	* new.streambnk_tp_att_coef,
+-- Added this 10.2.18 based on conversation with BME
+-- Smaller models have lower values for streambank
+	tpload_streambank_att 	= (old.tpload_streambank * 1.25 ) * new.streambnk_tp_att_coef,
 	-- New 5_22_18
 	tpload_subsurface_att   = old.tpload_subsurface * new.grnd_tp_att_coef,
 	tpload_pointsource_att = old.tpload_pointsource * new.pt_2011_tp_att_coef   ,
@@ -321,7 +323,9 @@ Set
  	tnload_OtherUp_att 	= old.tnload_OtherUp	* new.all_wetland2011cat_tn_att_coef,
 	tnload_FarmAn_att 	= old.tnload_FarmAn 	* new.all_farm2011cat_tn_att_coef,
 --	tnload_tiledrain_att ,
-	tnload_streambank_att 	= old.tnload_streambank	* new.streambnk_tp_att_coef,
+-- Added this 10.2.18 based on conversation with BME
+-- Smaller models have lower values for streambank
+	tnload_streambank_att 	= ( old.tnload_streambank * 1.25 )* new.streambnk_tp_att_coef,
 
 	-- New 5_22_18
 	tnload_subsurface_att   = old.tnload_subsurface * new.grnd_tn_att_coef,
@@ -339,7 +343,9 @@ Set
  	tssload_OtherUp_att 	= old.tssload_OtherUp	* new.all_wetland2011cat_tss_att_coef,
 --	tssload_FarmAn_att 	= old.tssload_FarmAn 	* new.all_farm2011cat_tss_att_coef
 --	tssload_tiledrain_att ,
-	tssload_streambank_att 	= old.tssload_streambank * new.streambnk_tss_att_coef
+-- Added this 10.2.18 based on conversation with BME
+-- Smaller models have lower values for streambank
+	tssload_streambank_att 	= (old.tssload_streambank * 1.25) * new.streambnk_tss_att_coef
 --	tssload_subsurface_att ,
 --	tssload_pointsource_att = old.tssload_pointsource * new.pt_2011_tss_att_coef   ,
 --	tssload_septics_att     = old.tssload_septics	* new.lowdensity2011cat_tss_att_coef,
