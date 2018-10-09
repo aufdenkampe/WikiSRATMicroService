@@ -241,12 +241,16 @@ x.comid
 	(              coalesce(huc12_out.tpload_Wooded,0)      *             coalesce(p_all_forest2011cat_x_huc12,0)) +
 	(              coalesce(huc12_out.tpload_Open,0)        *             coalesce(p_grs2011catcomid_x_huc12)) +
 	(              coalesce(huc12_out.tpload_barren,0)      *             coalesce(p_bl2011catcomid_x_huc12,0)  ) +
-	(              coalesce(huc12_out.tpload_ldm,0)         *             coalesce(p_all_lowdensity2011cat_x_huc12,0)) +
+
+	-- Changd based on call with BME 10.9.18
+	(              coalesce(huc12_out.tpload_ldm,0)         *             coalesce(p_urbld2011catcomid_x_huc12,0)) +
+	
 	(              coalesce(huc12_out.tpload_MDM,0)         *             coalesce(p_urbmd2011catcomid_x_huc12,0)) +
 	(              coalesce(huc12_out.tpload_HDM,0)         *             coalesce(p_urbhi2011catcomid_x_huc12,0)) +
 	(              coalesce(huc12_out.tpload_OtherUp,0)     *             coalesce(p_all_wetland2011cat_x_huc12,0)) +
 	(              coalesce(huc12_out.tpload_FarmAn,0)      *             coalesce(p_all_farm2011cat_x_huc12,0)) +
-	--(              coalesce(huc12_out.tpload_tiledrain,0)   *             coalesce(p_catarea_x_huc12,0)) +
+	-- Changd based on call with BME 10.9.18
+	(              coalesce(huc12_out.tpload_tiledrain,0)   *             coalesce(p_urbop2011catcomid_x_huc12,0)) +
 
 -- Stream Bank Is Special
 -- Added this 10.2.18 based on conversation with BME
@@ -266,12 +270,17 @@ x.comid
 	(              coalesce(huc12_out.tnload_Wooded,0)      *             coalesce(p_all_forest2011cat_x_huc12,0)) +
 	(              coalesce(huc12_out.tnload_Open,0)        *             coalesce(p_grs2011catcomid_x_huc12)) +
 	(              coalesce(huc12_out.tnload_barren,0)      *             coalesce(p_bl2011catcomid_x_huc12,0)  ) +
-	(              coalesce(huc12_out.tnload_ldm,0)         *             coalesce(p_all_lowdensity2011cat_x_huc12,0)) +
+--	(              coalesce(huc12_out.tnload_ldm,0)         *             coalesce(p_all_lowdensity2011cat_x_huc12,0)) +
+-- Changd based on call with BME 10.9.18
+	(              coalesce(huc12_out.tnload_ldm,0)         *             coalesce(p_urbld2011catcomid_x_huc12,0)) +
+	
 	(              coalesce(huc12_out.tnload_MDM,0)         *             coalesce(p_urbmd2011catcomid_x_huc12,0)) +
 	(              coalesce(huc12_out.tnload_HDM,0)         *             coalesce(p_urbhi2011catcomid_x_huc12,0)) +
 	(              coalesce(huc12_out.tnload_OtherUp,0)     *             coalesce(p_all_wetland2011cat_x_huc12,0)) +
 	(              coalesce(huc12_out.tnload_FarmAn,0)      *             coalesce(p_all_farm2011cat_x_huc12,0)) +
-	--(              coalesce(huc12_out.tnload_tiledrain,0)   *             coalesce(p_catarea_x_huc12,0)) +
+	-- Changd based on call with BME 10.9.18
+	(              coalesce(huc12_out.tnload_tiledrain,0)   *             coalesce(p_urbop2011catcomid_x_huc12,0)) +
+
 
 -- Stream Bank Is Special
 -- Added this 10.2.18 based on conversation with BME
@@ -292,12 +301,18 @@ x.comid
 	(              coalesce(huc12_out.tssload_Wooded,0)      *             coalesce(p_all_forest2011cat_x_huc12,0)) +
 	(              coalesce(huc12_out.tssload_Open,0)        *             coalesce(p_grs2011catcomid_x_huc12)) +
 	(              coalesce(huc12_out.tssload_barren,0)      *             coalesce(p_bl2011catcomid_x_huc12,0)  ) +
-	(              coalesce(huc12_out.tssload_ldm,0)         *             coalesce(p_all_lowdensity2011cat_x_huc12,0)) +
+--	(              coalesce(huc12_out.tssload_ldm,0)         *             coalesce(p_all_lowdensity2011cat_x_huc12,0)) +
+-- Changd based on call with BME 10.9.18
+	(              coalesce(huc12_out.tssload_ldm,0)         *             coalesce(p_urbld2011catcomid_x_huc12,0)) +
+		
 	(              coalesce(huc12_out.tssload_MDM,0)         *             coalesce(p_urbmd2011catcomid_x_huc12,0)) +
 	(              coalesce(huc12_out.tssload_HDM,0)         *             coalesce(p_urbhi2011catcomid_x_huc12,0)) +
 	(              coalesce(huc12_out.tssload_OtherUp,0)     *             coalesce(p_all_wetland2011cat_x_huc12,0)) +
 --	(              coalesce(huc12_out.tssload_FarmAn,0)      *             coalesce(p_all_farm2011cat_x_huc12,0)) +
 	--(              coalesce(huc12_out.tssload_tiledrain,0)   *             coalesce(p_catarea_x_huc12,0)) +
+	-- Changd based on call with BME 10.9.18
+	(              coalesce(huc12_out.tssload_tiledrain,0)   *             coalesce(p_urbop2011catcomid_x_huc12,0)) +
+	
 
 -- Stream Bank Is Special
 -- Added this 10.2.18 based on conversation with BME
