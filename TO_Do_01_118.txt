@@ -1,2 +1,6 @@
-1) add a coef to TN, TSS, and TP for steam bank loading of 1.25
-2) Acept input of developed open space (in the unused slot)
+1_ add a coef to TN, TSS, and TP for steam bank loading of 1.25
+2_ Acept input of developed open space (in the unused slot)
+3_ Power Point For Lin
+4_ emails and Slack Done
+5_ Work on Paper
+6_ Work on Candidacy

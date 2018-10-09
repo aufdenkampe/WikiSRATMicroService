@@ -3,6 +3,8 @@
 -- To Do Calculate total sum for each reach
 
 
+-- Uppdate from Barry Use the Other_up slot to put in low density open space email from 10.2.18
+
 -- DROP FUNCTION wikiwtershed.srat_tst(character varying[]);
 
 CREATE OR REPLACE FUNCTION wikiwtershed.srat_huc12
@@ -39,6 +41,7 @@ tnload_streambank float [],
 tnload_subsurface float [],
 tnload_pointsource float [],
 tnload_septics float [],
+
 tssload_hp float [],
 tssload_crop float [],
 tssload_wooded float [],
@@ -298,12 +301,21 @@ Set
 	tpload_Wooded_att 	= old.tpload_Wooded 	* new.all_forest2011cat_tp_att_coef,
  	tpload_Open_att 	= old.tpload_Open 	* new.grs2011_tp_att_coef,
 	tpload_barren_att 	= old.tpload_barren 	* new.bl2011_tp_att_coef,
-	tpload_ldm_att 		= old.tpload_ldm 	* new.lowdensity2011cat_tp_att_coef,
+
+--	tpload_ldm_att 		= old.tpload_ldm 	* new.lowdensity2011cat_tp_att_coef,
+--	Replaced with just the low density seperate out open space based on 10.9.18 phone call bme
+	tpload_ldm_att 		= old.tpload_ldm 	* new.urblo2011_tp_att_coef,
+
 	tpload_MDM_att 		= old.tpload_MDM 	* new.urbmd2011_tp_att_coef,
 	tpload_HDM_att 		= old.tpload_HDM 	* new.urbhi2011_tp_att_coef,
  	tpload_OtherUp_att 	= old.tpload_OtherUp	* new.all_wetland2011cat_tp_att_coef,
 	tpload_FarmAn_att 	= old.tpload_FarmAn 	* new.all_farm2011cat_tp_att_coef,
---	tpload_tiledrain_att ,
+
+
+--	Update based on phone call and email from BME 10.9.18 use tile drain for open space developed
+	tpload_tiledrain_att 	= old.tpload_tiledrain * urbop2011_tp_att_coef,
+
+
 -- Added this 10.2.18 based on conversation with BME
 -- Smaller models have lower values for streambank
 	tpload_streambank_att 	= (old.tpload_streambank * 1.25 ) * new.streambnk_tp_att_coef,
@@ -317,12 +329,21 @@ Set
 	tnload_Wooded_att 	= old.tnload_Wooded 	* new.all_forest2011cat_tn_att_coef,
  	tnload_Open_att 	= old.tnload_Open 	* new.grs2011_tn_att_coef,
 	tnload_barren_att 	= old.tnload_barren 	* new.bl2011_tn_att_coef,
-	tnload_ldm_att 		= old.tnload_ldm 	* new.lowdensity2011cat_tn_att_coef,
+	
+--	tnload_ldm_att 		= old.tnload_ldm 	* new.lowdensity2011cat_tn_att_coef,
+--	Replaced with just the low density seperate out open space based on 10.9.18 phone call bme
+	tnload_ldm_att 		= old.tnload_ldm 	* new.urblo2011_tn_att_coef,
+
+	
 	tnload_MDM_att 		= old.tnload_MDM 	* new.urbmd2011_tn_att_coef,
 	tnload_HDM_att 		= old.tnload_HDM 	* new.urbhi2011_tn_att_coef,
  	tnload_OtherUp_att 	= old.tnload_OtherUp	* new.all_wetland2011cat_tn_att_coef,
 	tnload_FarmAn_att 	= old.tnload_FarmAn 	* new.all_farm2011cat_tn_att_coef,
---	tnload_tiledrain_att ,
+	
+--	Update based on phone call and email from BME 10.9.18 use tile drain for open space developed
+	tnload_tiledrain_att 	= old.tnload_tiledrain * urbop2011_tn_att_coef,
+
+
 -- Added this 10.2.18 based on conversation with BME
 -- Smaller models have lower values for streambank
 	tnload_streambank_att 	= ( old.tnload_streambank * 1.25 )* new.streambnk_tp_att_coef,
@@ -335,14 +356,22 @@ Set
 	tssload_hp_att 		= old.tssload_hp 	* new.hay2011_tss_att_coef,
 	tssload_Crop_att 	= old.tssload_Crop 	* new.crop2011_tss_att_coef,
 	tssload_Wooded_att 	= old.tssload_Wooded 	* new.all_forest2011cat_tss_att_coef,
+	-- 10.2.18 GRS from stream cat is grassland/herbaceous cat 71
  	tssload_Open_att 	= old.tssload_Open 	* new.grs2011_tp_att_coef,
 	tssload_barren_att 	= old.tssload_barren 	* new.bl2011_tss_att_coef,
-	tssload_ldm_att 	= old.tssload_ldm 	* new.lowdensity2011cat_tss_att_coef,
+	
+--	tssload_ldm_att 	= old.tssload_ldm 	* new.lowdensity2011cat_tss_att_coef,
+--	Replaced with just the low density seperate out open space based on 10.9.18 phone call bme
+	tssload_ldm_att 	= old.tssload_ldm 	* new.urblo2011_tss_att_coef,
+	
 	tssload_MDM_att 	= old.tssload_MDM 	* new.urbmd2011_tss_att_coef,
 	tssload_HDM_att 	= old.tssload_HDM 	* new.urbhi2011_tss_att_coef,
  	tssload_OtherUp_att 	= old.tssload_OtherUp	* new.all_wetland2011cat_tss_att_coef,
 --	tssload_FarmAn_att 	= old.tssload_FarmAn 	* new.all_farm2011cat_tss_att_coef
---	tssload_tiledrain_att ,
+
+--	Update based on phone call and email from BME 10.9.18 use tile drain for open space developed
+	tssload_tiledrain_att 	= old.tssload_tiledrain * urbop2011_tss_att_coef,
+
 -- Added this 10.2.18 based on conversation with BME
 -- Smaller models have lower values for streambank
 	tssload_streambank_att 	= (old.tssload_streambank * 1.25) * new.streambnk_tss_att_coef
