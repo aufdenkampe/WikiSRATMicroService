@@ -243,7 +243,7 @@ x.comid
 	(              coalesce(huc12_out.tpload_barren,0)      *             coalesce(p_bl2011catcomid_x_huc12,0)  ) +
 
 	-- Changd based on call with BME 10.9.18
-	(              coalesce(huc12_out.tpload_ldm,0)         *             coalesce(p_urbld2011catcomid_x_huc12,0)) +
+	(              coalesce(huc12_out.tpload_ldm,0)         *             coalesce(p_urblo2011catcomid_x_huc12,0)) +
 	
 	(              coalesce(huc12_out.tpload_MDM,0)         *             coalesce(p_urbmd2011catcomid_x_huc12,0)) +
 	(              coalesce(huc12_out.tpload_HDM,0)         *             coalesce(p_urbhi2011catcomid_x_huc12,0)) +
@@ -272,7 +272,7 @@ x.comid
 	(              coalesce(huc12_out.tnload_barren,0)      *             coalesce(p_bl2011catcomid_x_huc12,0)  ) +
 --	(              coalesce(huc12_out.tnload_ldm,0)         *             coalesce(p_all_lowdensity2011cat_x_huc12,0)) +
 -- Changd based on call with BME 10.9.18
-	(              coalesce(huc12_out.tnload_ldm,0)         *             coalesce(p_urbld2011catcomid_x_huc12,0)) +
+	(              coalesce(huc12_out.tnload_ldm,0)         *             coalesce(p_urblo2011catcomid_x_huc12,0)) +
 	
 	(              coalesce(huc12_out.tnload_MDM,0)         *             coalesce(p_urbmd2011catcomid_x_huc12,0)) +
 	(              coalesce(huc12_out.tnload_HDM,0)         *             coalesce(p_urbhi2011catcomid_x_huc12,0)) +
@@ -303,7 +303,7 @@ x.comid
 	(              coalesce(huc12_out.tssload_barren,0)      *             coalesce(p_bl2011catcomid_x_huc12,0)  ) +
 --	(              coalesce(huc12_out.tssload_ldm,0)         *             coalesce(p_all_lowdensity2011cat_x_huc12,0)) +
 -- Changd based on call with BME 10.9.18
-	(              coalesce(huc12_out.tssload_ldm,0)         *             coalesce(p_urbld2011catcomid_x_huc12,0)) +
+	(              coalesce(huc12_out.tssload_ldm,0)         *             coalesce(p_urblo2011catcomid_x_huc12,0)) +
 		
 	(              coalesce(huc12_out.tssload_MDM,0)         *             coalesce(p_urbmd2011catcomid_x_huc12,0)) +
 	(              coalesce(huc12_out.tssload_HDM,0)         *             coalesce(p_urbhi2011catcomid_x_huc12,0)) +
