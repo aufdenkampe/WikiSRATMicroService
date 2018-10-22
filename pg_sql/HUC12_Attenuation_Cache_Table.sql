@@ -40,6 +40,10 @@ Add Column  rdc_10 float;
 Alter Table wikiwtershed.HUC12_att_tmptbl1_comidextarray
 Add Column  rdc_5 float;
 
+Alter Table wikiwtershed.HUC12_att_tmptbl1_comidextarray
+Add Column  rdc_13 float;
+
+
 
 Drop Table if Exists wikiwtershed.HUC12_att_tmptbl1_comidextarray;
  
@@ -58,6 +62,7 @@ rdc_21 float,
 rdc_11 float
 rdc_10 float
 rdc_5 float
+rdc_13 float
 );
 
 ALTER TABLE wikiwtershed.HUC12_att_tmptbl1_comidextarray ALTER COLUMN comid SET NOT NULL;
@@ -81,7 +86,8 @@ rdc_75,
 rdc_21,
 rdc_11,
 rdc_10,
-rdc_5
+rdc_5,
+rdc_13
 )
 
 -- I had to make a major fix here 6-8-18
@@ -106,6 +112,7 @@ Select 1 step,lnx.comid,lnx.comid, (shed.shedareadrainlake/100), 1::integer as p
 	, 1 - ( (shed.shedareadrainlake/100)::float * (0.11)::float ) calc11
 	, 1 - ( (shed.shedareadrainlake/100)::float * (0.10)::float ) calc10
 	, 1 - ( (shed.shedareadrainlake/100)::float * (0.05)::float ) calc5
+	, 1 - ( (shed.shedareadrainlake/100)::float * (0.13)::float ) calc13
 From wikiwtershed.nhdplus_stream_nsidx lnx join wikiwtershed.cache_nhdcoefs shed
 On lnx.comid = shed.comid --and shed.huc12 like '020402050401' and shed.comid = 4652300
  
@@ -124,7 +131,8 @@ Select included_parts.step + 1, included_parts.comid,t1.comid, shd, included_par
 	case when (included_parts.calc21 * ( 1 - ( coalesce(shd,0) * (0.21)::float ))) < .01 then 0 else (included_parts.calc21 * ( 1 - ( coalesce(shd,0) * (0.21)::float ))) end,
 	case when (included_parts.calc11 * ( 1 - ( coalesce(shd,0) * (0.11)::float ))) < .01 then 0 else (included_parts.calc11 * ( 1 - ( coalesce(shd,0) * (0.11)::float ))) end,
 	case when (included_parts.calc10 * ( 1 - ( coalesce(shd,0) * (0.10)::float ))) < .01 then 0 else (included_parts.calc10 * ( 1 - ( coalesce(shd,0) * (0.10)::float ))) end,
-	case when (included_parts.calc5  * ( 1 - ( coalesce(shd,0) * (0.05)::float ))) < .01 then 0 else (included_parts.calc5  * ( 1 - ( coalesce(shd,0) * (0.05)::float ))) end
+	case when (included_parts.calc5  * ( 1 - ( coalesce(shd,0) * (0.05)::float ))) < .01 then 0 else (included_parts.calc5  * ( 1 - ( coalesce(shd,0) * (0.05)::float ))) end,
+	case when (included_parts.calc13 * ( 1 - ( coalesce(shd,0) * (0.13)::float ))) < .01 then 0 else (included_parts.calc13 * ( 1 - ( coalesce(shd,0) * (0.13)::float ))) end
 	 	 
 From  
 	(
@@ -141,7 +149,7 @@ From
 Select 
 	comid, 
 	--array_agg(rte order by plce asc)::float[],
-	min(calc84), min(calc29), min(calc12),min(calc42), min(calc22), min(calc0), min(calc75), min(calc21), min(calc11), min(calc10), min(calc5)
+	min(calc84), min(calc29), min(calc12),min(calc42), min(calc22), min(calc0), min(calc75), min(calc21), min(calc11), min(calc10), min(calc5), min(calc13)
 	--*	
 From included_parts
 Group By comid  
