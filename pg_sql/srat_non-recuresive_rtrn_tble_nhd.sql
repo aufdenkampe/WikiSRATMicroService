@@ -372,7 +372,6 @@ where old.comid = new.comid;
 --
 
 
- 
 do 
 $$ 
 declare _r record; 
