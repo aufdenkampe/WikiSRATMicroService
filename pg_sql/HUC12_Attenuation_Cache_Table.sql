@@ -342,36 +342,36 @@ streambnk_tss_att_coef
 Select 
 hcn.huc12,
 
-sum(coalesce(p_ow2011catcomid_x_huc12,0) 	* rdc_11),
-sum(coalesce(p_ice2011catcomid_x_huc12,0) 	* rdc_11),
-sum(coalesce(p_urbop2011catcomid_x_huc12,0) 	* rdc_11),
-sum(coalesce(p_urblo2011catcomid_x_huc12,0) 	* rdc_11),
-sum(coalesce(p_urbmd2011catcomid_x_huc12,0) 	* rdc_11),
-sum(coalesce(p_urbhi2011catcomid_x_huc12,0) 	* rdc_11),
-sum(coalesce(p_bl2011catcomid_x_huc12,0) 	* rdc_11),
-sum(coalesce(p_decid2011catcomid_x_huc12,0) 	* rdc_11),
-sum(coalesce(p_conif2011catcomid_x_huc12,0) 	* rdc_11),
-sum(coalesce(p_mxfst2011catcomid_x_huc12,0) 	* rdc_11),
-sum(coalesce(p_shrb2011catcomid_x_huc12,0) 	* rdc_11),
-sum(coalesce(p_grs2011catcomid_x_huc12,0) 	* rdc_11),
-sum(coalesce(p_hay2011catcomid_x_huc12,0) 	* rdc_11),
-sum(coalesce(p_crop2011catcomid_x_huc12,0) 	* rdc_11),
-sum(coalesce(p_wdwet2011catcomid_x_huc12,0) 	* rdc_11),
-sum(coalesce(p_hbwet2011catcomid_x_huc12,0) 	* rdc_11),
-sum(coalesce(p_pt_kgp_yr_x_huc12,0) 		* rdc_11),
+sum(coalesce(p_ow2011catcomid_x_huc12,0) 	* rdc_13),
+sum(coalesce(p_ice2011catcomid_x_huc12,0) 	* rdc_13),
+sum(coalesce(p_urbop2011catcomid_x_huc12,0) 	* rdc_13),
+sum(coalesce(p_urblo2011catcomid_x_huc12,0) 	* rdc_13),
+sum(coalesce(p_urbmd2011catcomid_x_huc12,0) 	* rdc_13),
+sum(coalesce(p_urbhi2011catcomid_x_huc12,0) 	* rdc_13),
+sum(coalesce(p_bl2011catcomid_x_huc12,0) 	* rdc_13),
+sum(coalesce(p_decid2011catcomid_x_huc12,0) 	* rdc_13),
+sum(coalesce(p_conif2011catcomid_x_huc12,0) 	* rdc_13),
+sum(coalesce(p_mxfst2011catcomid_x_huc12,0) 	* rdc_13),
+sum(coalesce(p_shrb2011catcomid_x_huc12,0) 	* rdc_13),
+sum(coalesce(p_grs2011catcomid_x_huc12,0) 	* rdc_13),
+sum(coalesce(p_hay2011catcomid_x_huc12,0) 	* rdc_13),
+sum(coalesce(p_crop2011catcomid_x_huc12,0) 	* rdc_13),
+sum(coalesce(p_wdwet2011catcomid_x_huc12,0) 	* rdc_13),
+sum(coalesce(p_hbwet2011catcomid_x_huc12,0) 	* rdc_13),
+sum(coalesce(p_pt_kgp_yr_x_huc12,0) 		* rdc_13),
 
-sum(coalesce(p_all_wetland2011cat_x_huc12,0) 	* rdc_11),
-sum(coalesce(p_all_lowdensity2011cat_x_huc12,0) * rdc_11),
-sum(coalesce(p_all_forest2011cat_x_huc12,0) 	* rdc_11),
-sum(coalesce(p_all_farm2011cat_x_huc12,0) 	* rdc_11),
+sum(coalesce(p_all_wetland2011cat_x_huc12,0) 	* rdc_13),
+sum(coalesce(p_all_lowdensity2011cat_x_huc12,0) * rdc_13),
+sum(coalesce(p_all_forest2011cat_x_huc12,0) 	* rdc_13),
+sum(coalesce(p_all_farm2011cat_x_huc12,0) 	* rdc_13),
 --streambank is special
 (
-( sum(coalesce(p_imparea_x_huc12,0) 	* rdc_11) * 0.60 ) +
-( sum(coalesce(p_catarea_x_huc12,0) 	* rdc_11) * 0.40 )
+( sum(coalesce(p_imparea_x_huc12,0) 	* rdc_13) * 0.60 ) +
+( sum(coalesce(p_catarea_x_huc12,0) 	* rdc_13) * 0.40 )
 ),
 
 -- Add in subsurface
-sum(coalesce(p_tnsumgrnd_x_huc12,0) 	* rdc_11),
+sum(coalesce(p_tnsumgrnd_x_huc12,0) 	* rdc_13),
 
 
 
