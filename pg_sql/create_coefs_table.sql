@@ -52,12 +52,16 @@ CREATE INDEX
 ALTER TABLE wikiwtershed.cache_nhdcoefs2
   ADD FOREIGN KEY (huc12) REFERENCES wikiwtershed.boundary_huc12 (huc12)
    ON UPDATE NO ACTION ON DELETE NO ACTION;
-CREATE INDEX huc12foreignkeycoefs21
+CREATE INDEX huc12foreignkeycoefs21a
   ON wikiwtershed.cache_nhdcoefs2(huc12);
 
 Grant Select on table wikiwtershed.cache_nhdcoefs2 to ms_select;
+
+
  
 Drop Table If Exists wikiwtershed.cache_nhdcoefs_old;
+
+
 
 Alter Table wikiwtershed.cache_nhdcoefs rename to cache_nhdcoefs_old;
 
@@ -81,7 +85,8 @@ From
  on t1.comid = t2.comid
  
 
-Select * From wikiwtershed.strmcat11 limit 10
+Select sum(qe_ma) from wikiwtershed.cache_nhdcoefs2
 
- 
+ drop table wikiwtershed.cache_nhdcoefs2
+
 	

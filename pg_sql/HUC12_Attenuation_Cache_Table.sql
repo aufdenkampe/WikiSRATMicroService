@@ -169,7 +169,7 @@ ALTER TABLE wikiwtershed.huc12_att_tmptbl1_comidextarray
 Select * from wikiwtershed.HUC12_att_tmptbl1_comidextarray limit 100
 
 
-
+-- Ran from here 12_14_18 because I put in new pt source data
 
 Drop Table if Exists wikiwtershed.HUC12_att2;
 Create Table wikiwtershed.HUC12_att2
@@ -453,7 +453,14 @@ grant select on wikiwtershed.HUC12_att2  to ms_select;
 
 Alter Table wikiwtershed.HUC12_att2 Rename TO HUC12_att_new;
 
-Alter Table wikiwtershed.HUC12_att_new add constraint pkhuc12_att1110 Primary Key (huc12);
+Select count(*), sum(pt_2011_tn_att_coef) from wikiwtershed.HUC12_att_new
+union all
+Select count(*), sum(pt_2011_tn_att_coef)  from wikiwtershed.HUC12_att
+
+
+
+
+Alter Table wikiwtershed.HUC12_att_new add constraint pkhuc12_att11a Primary Key (huc12);
 
 select * from wikiwtershed.HUC12_att_new  limit 100
 
