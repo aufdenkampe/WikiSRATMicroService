@@ -113,10 +113,14 @@ CREATE OR REPLACE VIEW wikiwtershed.nhdcoefs AS
             ELSE NULL::double precision
         END, 0::double precision) AS p_pt_kgp_yr_x_huc12, t1.qe_ma
    FROM tmp
-   LEFT JOIN wikiwtershed.nhdplus_stream t1 ON tmp.comid = t1.comid
+   LEFT JOIN wikiwtershed.comid_qe_ma_new t1 ON tmp.comid = t1.comid
    LEFT JOIN ( SELECT ms_pointsource.comid, sum(ms_pointsource.kgn_yr) AS pt_kgn_yr, sum(ms_pointsource.kgp_yr) AS pt_kgp_yr
-      FROM wikiwtershed.ms_pointsource
-     GROUP BY ms_pointsource.comid) pt ON tmp.comid = pt.comid;
+   -- Added in seperate points sources for DRB and United States
+      FROM (select comid, kgn_yr, kgp_yr from wikiwtershed.ms_pointsource where in_drb = 'false' union all
+select comid, kgn_yr, kgp_yr from wikiwtershed.ms_pointsource_drb_12_13_18  ) ms_pointsource
+     GROUP BY ms_pointsource.comid
+     ) pt ON tmp.comid = pt.comid;
 
 ALTER TABLE wikiwtershed.nhdcoefs
   OWNER TO drwiadmin;
+ 
