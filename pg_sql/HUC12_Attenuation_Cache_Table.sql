@@ -43,6 +43,9 @@ Add Column  rdc_5 float;
 Alter Table wikiwtershed.HUC12_att_tmptbl1_comidextarray
 Add Column  rdc_13 float;
 
+Select * from wikiwtershed.HUC12_att_tmptbl1_comidextarray
+where rdc_13 is not null limit 2
+
 
 
 Drop Table if Exists wikiwtershed.HUC12_att_tmptbl1_comidextarray;
@@ -96,7 +99,7 @@ rdc_13
 
 
 (
-With Recursive included_parts(step, comid,comid2, rte, plce, huc12, dnhydroseq,areasqkm, calc84,calc29,calc12, calc42, calc22, calc0, calc75, calc21,calc11,calc10 ) As 
+With Recursive included_parts(step, comid,comid2, rte, plce, huc12, dnhydroseq,areasqkm, calc84,calc29,calc12, calc42, calc22, calc0, calc75, calc21,calc11,calc10,calc5,calc13 ) As 
 (
 Select * From
 (
