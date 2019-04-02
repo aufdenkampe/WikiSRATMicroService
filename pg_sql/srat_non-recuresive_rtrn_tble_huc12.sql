@@ -4,13 +4,42 @@
 SET SESSION AUTHORIZATION 'drwiadmin';
 -- DROP FUNCTION wikiwtershed.srat_tst(character varying[]);
 
+-- Uppdate from Barry Use the Other_up slot to put in low density open space email from 10.2.18
+
 -- DROP FUNCTION wikiwtershed.srat_tst(character varying[]);
 -- Function: wikiwtershed.srat_huc12(character varying[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[])
 
 -- DROP FUNCTION wikiwtershed.srat_huc12(character varying[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[]);
 -- Function: wikiwtershed.srat_huc12(character varying[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[])
 
--- DROP FUNCTION wikiwtershed.srat_huc12(character varying[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[], double precision[]);
+tpload_septics float [],
+tnload_hp float [],
+tnload_crop float [],
+tnload_wooded float [],
+tnload_open float [],
+tnload_barren float [],
+tnload_ldm float [],
+tnload_mdm float [],
+tnload_hdm float [],
+tnload_otherup float [],
+tnload_farman float [],
+tnload_tiledrain float [],
+tnload_streambank float [],
+tnload_subsurface float [],
+tnload_pointsource float [],
+tnload_septics float [],
+
+tssload_hp float [],
+tssload_crop float [],
+tssload_wooded float [],
+tssload_open float [],
+tssload_barren float [],
+tssload_ldm float [],
+tssload_mdm float [],
+tssload_hdm float [],
+tssload_otherup float [],
+tssload_tiledrain float [],
+tssload_streambank float []
 
 CREATE OR REPLACE FUNCTION wikiwtershed.srat_huc12(IN huc12a character varying[], IN tpload_hp double precision[], IN tpload_crop double precision[], IN tpload_wooded double precision[], IN tpload_open double precision[], IN tpload_barren double precision[], IN tpload_ldm double precision[], IN tpload_mdm double precision[], IN tpload_hdm double precision[], IN tpload_otherup double precision[], IN tpload_farman double precision[], IN tpload_tiledrain double precision[], IN tpload_streambank double precision[], IN tpload_subsurface double precision[], IN tpload_pointsource double precision[], IN tpload_septics double precision[], IN tnload_hp double precision[], IN tnload_crop double precision[], IN tnload_wooded double precision[], IN tnload_open double precision[], IN tnload_barren double precision[], IN tnload_ldm double precision[], IN tnload_mdm double precision[], IN tnload_hdm double precision[], IN tnload_otherup double precision[], IN tnload_farman double precision[], IN tnload_tiledrain double precision[], IN tnload_streambank double precision[], IN tnload_subsurface double precision[], IN tnload_pointsource double precision[], IN tnload_septics double precision[], IN tssload_hp double precision[], IN tssload_crop double precision[], IN tssload_wooded double precision[], IN tssload_open double precision[], IN tssload_barren double precision[], IN tssload_ldm double precision[], IN tssload_mdm double precision[], IN tssload_hdm double precision[], IN tssload_otherup double precision[], IN tssload_tiledrain double precision[], IN tssload_streambank double precision[])
   RETURNS TABLE(huc12a_out character varying, tpload_hp_out double precision, tpload_crop_out double precision, tpload_wooded_out double precision, tpload_open_out double precision, tpload_barren_out double precision, tpload_ldm_out double precision, tpload_mdm_out double precision, tpload_hdm_out double precision, tpload_otherup_out double precision, tpload_farman_out double precision, tpload_tiledrain_out double precision, tpload_streambank_out double precision, tpload_subsurface_out double precision, tpload_pointsource_out double precision, tpload_septics_out double precision, tnload_hp_out double precision, tnload_crop_out double precision, tnload_wooded_out double precision, tnload_open_out double precision, tnload_barren_out double precision, tnload_ldm_out double precision, tnload_mdm_out double precision, tnload_hdm_out double precision, tnload_otherup_out double precision, tnload_farman_out double precision, tnload_tiledrain_out double precision, tnload_streambank_out double precision, tnload_subsurface_out double precision, tnload_pointsource_out double precision, tnload_septics_out double precision, tssload_hp_out double precision, tssload_crop_out double precision, tssload_wooded_out double precision, tssload_open_out double precision, tssload_barren_out double precision, tssload_ldm_out double precision, tssload_mdm_out double precision, tssload_hdm_out double precision, tssload_otherup_out double precision, tssload_tiledrain_out double precision, tssload_streambank_out double precision, comid_out text[]) AS
@@ -215,14 +244,26 @@ Set
 	tpload_Wooded_att 	= old.tpload_Wooded 	* new.all_forest2011cat_tp_att_coef,
  	tpload_Open_att 	= old.tpload_Open 	* new.grs2011_tp_att_coef,
 	tpload_barren_att 	= old.tpload_barren 	* new.bl2011_tp_att_coef,
-	tpload_ldm_att 		= old.tpload_ldm 	* new.lowdensity2011cat_tp_att_coef,
+
+--	tpload_ldm_att 		= old.tpload_ldm 	* new.lowdensity2011cat_tp_att_coef,
+--	Replaced with just the low density seperate out open space based on 10.9.18 phone call bme
+	tpload_ldm_att 		= old.tpload_ldm 	* new.urblo2011_tp_att_coef,
+
 	tpload_MDM_att 		= old.tpload_MDM 	* new.urbmd2011_tp_att_coef,
 	tpload_HDM_att 		= old.tpload_HDM 	* new.urbhi2011_tp_att_coef,
  	tpload_OtherUp_att 	= old.tpload_OtherUp	* new.all_wetland2011cat_tp_att_coef,
 	tpload_FarmAn_att 	= old.tpload_FarmAn 	* new.all_farm2011cat_tp_att_coef,
---	tpload_tiledrain_att ,
-	tpload_streambank_att 	= old.tpload_streambank	* new.streambnk_tp_att_coef,
---	tpload_subsurface_att ,
+
+
+--	Update based on phone call and email from BME 10.9.18 use tile drain for open space developed
+	tpload_tiledrain_att 	= old.tpload_tiledrain * urbop2011_tp_att_coef,
+
+
+-- Added this 10.2.18 based on conversation with BME
+-- Smaller models have lower values for streambank
+	tpload_streambank_att 	= (old.tpload_streambank * 1.25 ) * new.streambnk_tp_att_coef,
+	-- New 5_22_18
+	tpload_subsurface_att   = old.tpload_subsurface * new.grnd_tp_att_coef,
 	tpload_pointsource_att = old.tpload_pointsource * new.pt_2011_tp_att_coef   ,
 	tpload_septics_att     = old.tpload_septics	* new.lowdensity2011cat_tp_att_coef,
 
@@ -231,29 +272,52 @@ Set
 	tnload_Wooded_att 	= old.tnload_Wooded 	* new.all_forest2011cat_tn_att_coef,
  	tnload_Open_att 	= old.tnload_Open 	* new.grs2011_tn_att_coef,
 	tnload_barren_att 	= old.tnload_barren 	* new.bl2011_tn_att_coef,
-	tnload_ldm_att 		= old.tnload_ldm 	* new.lowdensity2011cat_tn_att_coef,
+	
+--	tnload_ldm_att 		= old.tnload_ldm 	* new.lowdensity2011cat_tn_att_coef,
+--	Replaced with just the low density seperate out open space based on 10.9.18 phone call bme
+	tnload_ldm_att 		= old.tnload_ldm 	* new.urblo2011_tn_att_coef,
+
+	
 	tnload_MDM_att 		= old.tnload_MDM 	* new.urbmd2011_tn_att_coef,
 	tnload_HDM_att 		= old.tnload_HDM 	* new.urbhi2011_tn_att_coef,
  	tnload_OtherUp_att 	= old.tnload_OtherUp	* new.all_wetland2011cat_tn_att_coef,
 	tnload_FarmAn_att 	= old.tnload_FarmAn 	* new.all_farm2011cat_tn_att_coef,
---	tnload_tiledrain_att ,
-	tnload_streambank_att 	= old.tnload_streambank	* new.streambnk_tp_att_coef,
---	tnload_subsurface_att ,
+	
+--	Update based on phone call and email from BME 10.9.18 use tile drain for open space developed
+	tnload_tiledrain_att 	= old.tnload_tiledrain * urbop2011_tn_att_coef,
+
+
+-- Added this 10.2.18 based on conversation with BME
+-- Smaller models have lower values for streambank
+	tnload_streambank_att 	= ( old.tnload_streambank * 1.25 )* new.streambnk_tp_att_coef,
+
+	-- New 5_22_18
+	tnload_subsurface_att   = old.tnload_subsurface * new.grnd_tn_att_coef,
 	tnload_pointsource_att = old.tnload_pointsource * new.pt_2011_tn_att_coef ,
 	tnload_septics_att     = old.tnload_septics	* new.lowdensity2011cat_tn_att_coef,
 
 	tssload_hp_att 		= old.tssload_hp 	* new.hay2011_tss_att_coef,
 	tssload_Crop_att 	= old.tssload_Crop 	* new.crop2011_tss_att_coef,
 	tssload_Wooded_att 	= old.tssload_Wooded 	* new.all_forest2011cat_tss_att_coef,
+	-- 10.2.18 GRS from stream cat is grassland/herbaceous cat 71
  	tssload_Open_att 	= old.tssload_Open 	* new.grs2011_tp_att_coef,
 	tssload_barren_att 	= old.tssload_barren 	* new.bl2011_tss_att_coef,
-	tssload_ldm_att 	= old.tssload_ldm 	* new.lowdensity2011cat_tss_att_coef,
+	
+--	tssload_ldm_att 	= old.tssload_ldm 	* new.lowdensity2011cat_tss_att_coef,
+--	Replaced with just the low density seperate out open space based on 10.9.18 phone call bme
+	tssload_ldm_att 	= old.tssload_ldm 	* new.urblo2011_tss_att_coef,
+	
 	tssload_MDM_att 	= old.tssload_MDM 	* new.urbmd2011_tss_att_coef,
 	tssload_HDM_att 	= old.tssload_HDM 	* new.urbhi2011_tss_att_coef,
  	tssload_OtherUp_att 	= old.tssload_OtherUp	* new.all_wetland2011cat_tss_att_coef,
 --	tssload_FarmAn_att 	= old.tssload_FarmAn 	* new.all_farm2011cat_tss_att_coef
---	tssload_tiledrain_att ,
-	tssload_streambank_att 	= old.tssload_streambank * new.streambnk_tss_att_coef
+
+--	Update based on phone call and email from BME 10.9.18 use tile drain for open space developed
+	tssload_tiledrain_att 	= old.tssload_tiledrain * urbop2011_tss_att_coef,
+
+-- Added this 10.2.18 based on conversation with BME
+-- Smaller models have lower values for streambank
+	tssload_streambank_att 	= (old.tssload_streambank * 1.25) * new.streambnk_tss_att_coef
 --	tssload_subsurface_att ,
 --	tssload_pointsource_att = old.tssload_pointsource * new.pt_2011_tss_att_coef   ,
 --	tssload_septics_att     = old.tssload_septics	* new.lowdensity2011cat_tss_att_coef,
