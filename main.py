@@ -5,11 +5,11 @@ import json
 
 print('Loading function')
 try:
-    database = os.environ['POSTGRES_DB']
-    user = os.environ['POSTGRES_USER']
-    host = os.environ['POSTGRES_HOST']
-    port = os.environ['POSTGRES_PORT']
-    password = os.environ['POSTGRES_PASSWORD']
+    database = os.environ['drwi']
+    user = os.environ['mikec']
+    host = os.environ['ans-drwi.ansp.org']
+    port = os.environ['5432']
+    password = os.environ['gh28bh230vg']
 except KeyError as e:
     print("Enviromnanetal variables not set (" + e.args[0] + ")")
 
